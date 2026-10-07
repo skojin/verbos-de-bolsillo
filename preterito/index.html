@@ -603,6 +603,8 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--blue); outl
     el.addEventListener("keydown", (e) => {
       // from the stem, Enter/space jumps to the ending while the ending is still empty
       if (id === "stem" && !S.answered && (e.key === "Enter" || e.key === " ") && !$("end").value.trim()) { e.preventDefault(); return focusEnd(); }
+      // Backspace in an empty ending goes back to the stem
+      if (id === "end" && !S.answered && (e.key === "Backspace" || e.keyCode === 8) && !el.value) { e.preventDefault(); return focusStem(); }
       if (e.key === "Enter") { e.preventDefault(); check(false); }
     });
   });
