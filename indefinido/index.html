@@ -111,7 +111,6 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--blue); outl
 .verb { font-family: var(--f-display); font-size: 34px; line-height: 1.05; letter-spacing: -0.01em; }
 .mean { color: var(--muted); font-size: 15px; }
 .verb.tg, .mean { cursor: pointer; user-select: none; }
-.mean.off { letter-spacing: .2em; opacity: .6; }
 .gtag { font: 400 11.5px var(--f-body); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); background: transparent; border: 0; padding: 4px 0; cursor: pointer; touch-action: manipulation; }
 .gtag.off { width: 26px; height: 26px; padding: 0; border: 1px dashed var(--line); border-radius: 50%; font: 700 14px var(--f-body); letter-spacing: 0; display: inline-grid; place-items: center; }
 .person { align-self: flex-start; font-weight: 700; font-size: 17px; color: var(--blue); background: var(--blue-soft); padding: 3px 10px; border-radius: 8px; }
@@ -629,11 +628,9 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--blue); outl
   });
   function renderMean() {
     const m = $("mean"), on = db.meaning !== false;
-    m.hidden = !KNOWS_RU;
+    m.hidden = !KNOWS_RU || !on;
     $("verb").classList.toggle("tg", KNOWS_RU);
-    m.classList.toggle("off", !on);
-    m.textContent = on ? parseKey(S.cur).v.mean : "···";
-    m.setAttribute("aria-label", on ? "Ocultar traducción" : "Mostrar traducción");
+    m.textContent = parseKey(S.cur).v.mean;
   }
   const toggleMean = () => { if (!S.cur || !KNOWS_RU) return; db.meaning = db.meaning === false; save(); renderMean(); };
   tap($("verb"), toggleMean);
