@@ -1,0 +1,709 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f3f6fb" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1322" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Pretérito">
+<style>:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }</style>
+<title>Pretérito · Verbos de bolsillo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: one narrow column, a cuaderno card with a red margin line; drill card sits high so it stays above the phone keyboard */
+:root {
+  --paper: #f3f6fb;
+  --grid: rgba(48, 92, 190, 0.09);
+  --card: #ffffff;
+  --ink: #18213d;
+  --muted: #5a6585;
+  --line: #d5dced;
+  --blue: #1f4fd8;
+  --blue-soft: rgba(31, 79, 216, 0.09);
+  --red: #cf2f2b;
+  --red-soft: rgba(207, 47, 43, 0.1);
+  --green: #17865a;
+  --green-soft: rgba(23, 134, 90, 0.12);
+  --amber: #c98a12;
+  --amber-soft: rgba(201, 138, 18, 0.2);
+  --margin: rgba(207, 47, 43, 0.45);
+  --f-display: "Young Serif", Georgia, "Times New Roman", serif;
+  --f-body: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --r: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --paper: #0e1322; --grid: rgba(130, 160, 255, 0.06); --card: #161d31; --ink: #e6eaf7;
+    --muted: #97a1bf; --line: #2a3352; --blue: #86a6ff; --blue-soft: rgba(134, 166, 255, 0.12);
+    --red: #ff6f66; --red-soft: rgba(255, 111, 102, 0.13); --green: #4fd093; --green-soft: rgba(79, 208, 147, 0.13);
+    --amber: #f0b34a; --amber-soft: rgba(240, 179, 74, 0.2); --margin: rgba(255, 111, 102, 0.4);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #0e1322; --grid: rgba(130, 160, 255, 0.06); --card: #161d31; --ink: #e6eaf7;
+  --muted: #97a1bf; --line: #2a3352; --blue: #86a6ff; --blue-soft: rgba(134, 166, 255, 0.12);
+  --red: #ff6f66; --red-soft: rgba(255, 111, 102, 0.13); --green: #4fd093; --green-soft: rgba(79, 208, 147, 0.13);
+  --amber: #f0b34a; --amber-soft: rgba(240, 179, 74, 0.2); --margin: rgba(255, 111, 102, 0.4);
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+html, body { min-height: 100%; }
+body {
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 22px 22px;
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 16px;
+  line-height: 1.45;
+  -webkit-tap-highlight-color: transparent;
+}
+.wrap { max-width: 520px; margin: 0 auto; padding: 10px 16px 40px; display: flex; flex-direction: column; gap: 12px; }
+
+/* top bar */
+.top { display: flex; align-items: center; gap: 12px; }
+.brand { font-family: var(--f-display); font-size: 19px; color: var(--ink); white-space: nowrap; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; padding: 4px 2px; }
+.brand .arr { font-family: var(--f-body); color: var(--muted); }
+.brand b { color: var(--red); font-weight: 400; }
+.tabs { display: flex; flex: 1; gap: 4px; background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 3px; }
+.tabs button { flex: 1; border: 0; background: transparent; color: var(--muted); font: 700 14px var(--f-body); padding: 7px 6px; border-radius: 999px; cursor: pointer; }
+.tabs button[aria-selected="true"] { background: var(--ink); color: var(--card); }
+@media (max-width: 430px) { .brand .bt { display: none; } }
+
+button { font-family: var(--f-body); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+/* mode row */
+.modes { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.pill { border: 1px solid var(--line); background: var(--card); color: var(--ink); border-radius: 999px; padding: 6px 12px; font-size: 14px; font-weight: 700; cursor: pointer; display: inline-flex; gap: 6px; align-items: center; }
+.pill .n { font-family: var(--f-mono); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.pill[aria-pressed="true"] { border-color: var(--blue); background: var(--blue-soft); color: var(--blue); }
+.pill[aria-pressed="true"] .n { color: var(--blue); }
+.pill:disabled { opacity: .45; cursor: default; }
+.pill.hard[aria-pressed="true"] { border-color: var(--red); background: var(--red-soft); color: var(--red); }
+.pill.hard[aria-pressed="true"] .n { color: var(--red); }
+.pill .x { font-size: 16px; line-height: 1; }
+
+/* progress */
+.prog { display: flex; align-items: center; gap: 10px; font-family: var(--f-mono); font-size: 12.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.bar { flex: 1; height: 5px; background: var(--line); border-radius: 3px; overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; background: var(--blue); transition: width .25s ease; }
+.ok-c { color: var(--green); } .bad-c { color: var(--red); }
+
+/* the drill card */
+.card {
+  position: relative; background: var(--card); border: 1px solid var(--line); border-radius: var(--r);
+  padding: 16px 16px 16px 30px; display: flex; flex-direction: column; gap: 12px;
+  box-shadow: 0 1px 0 var(--line), 0 10px 30px -18px rgba(24, 33, 61, .35);
+}
+.card::before { content: ""; position: absolute; left: 16px; top: 0; bottom: 0; width: 2px; background: var(--margin); }
+.head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.verb { font-family: var(--f-display); font-size: 34px; line-height: 1.05; letter-spacing: -0.01em; }
+.mean { color: var(--muted); font-size: 15px; }
+.gtag { font: 400 11.5px var(--f-body); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); background: transparent; border: 0; padding: 4px 0; cursor: pointer; touch-action: manipulation; }
+.gtag.off { width: 26px; height: 26px; padding: 0; border: 1px dashed var(--line); border-radius: 50%; font: 700 14px var(--f-body); letter-spacing: 0; display: inline-grid; place-items: center; }
+.person { align-self: flex-start; font-weight: 700; font-size: 17px; color: var(--blue); background: var(--blue-soft); padding: 3px 10px; border-radius: 8px; }
+
+.field {
+  display: flex; align-items: stretch; border: 2px solid var(--line); border-radius: 12px; background: var(--card);
+  overflow: hidden; transition: border-color .15s, background .15s;
+}
+.field:focus-within { border-color: var(--blue); }
+.field.ok { border-color: var(--green); background: var(--green-soft); }
+.field.bad { border-color: var(--red); background: var(--red-soft); }
+.field input { border: 0; background: transparent; color: var(--ink); font: 400 23px var(--f-body); padding: 10px 0; min-width: 0; outline: none; }
+.field input::placeholder { color: var(--muted); opacity: .55; }
+.pron { display: flex; align-items: center; padding: 0 2px 0 12px; font-size: 23px; color: var(--muted); }
+.pron[hidden] { display: none !important; }
+#stem { padding-left: 10px; padding-right: 2px; background: var(--blue-soft); color: var(--blue); width: 3.2em; border-right: 1px dashed var(--blue); text-align: right; }
+#stem:placeholder-shown { text-align: center; }
+#end { flex: 1; padding-left: 4px; padding-right: 12px; }
+.measure { position: absolute; visibility: hidden; white-space: pre; font: 400 23px var(--f-body); }
+.hint { font-size: 13px; color: var(--muted); margin-top: -4px; }
+
+.fb { min-height: 52px; display: flex; flex-direction: column; gap: 2px; font-size: 17px; }
+.fb .lbl { display: inline-block; width: 5.4em; font-size: 13px; color: var(--muted); }
+.fb .w { font-size: 20px; letter-spacing: .01em; }
+.d-bad { color: var(--red); text-decoration: line-through; text-decoration-thickness: 2px; }
+.d-miss { color: var(--blue); font-weight: 700; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.fb .good { color: var(--green); font-weight: 700; font-size: 20px; }
+.fb .tip { font-size: 13px; color: var(--muted); }
+
+.keys { display: flex; gap: 6px; }
+.keys .key { flex: 1 1 0; min-width: 0; }
+.keys .key.suf { flex-grow: 1.6; font-size: 19px; color: var(--blue); }
+.key { border: 1px solid var(--line); background: var(--paper); color: var(--ink); border-radius: 10px; font: 400 24px var(--f-body); padding: 7px 0; cursor: pointer; user-select: none; touch-action: manipulation; }
+.key:active, .key.flash { background: var(--blue-soft); border-color: var(--blue); color: var(--blue); }
+
+.acts { display: grid; grid-template-columns: 1fr 2fr; gap: 8px; }
+.btn { white-space: nowrap; border-radius: 12px; padding: 13px 10px; font: 700 16px var(--f-body); cursor: pointer; border: 1px solid var(--line); background: var(--card); color: var(--ink); touch-action: manipulation; user-select: none; }
+.btn.primary { background: var(--blue); border-color: var(--blue); color: var(--card); }
+.btn.ghost { color: var(--muted); }
+
+.done { display: flex; flex-direction: column; gap: 12px; }
+.done h2 { font-family: var(--f-display); font-weight: 400; font-size: 28px; margin: 0; text-wrap: balance; }
+.done p { margin: 0; color: var(--muted); }
+.missed { display: flex; flex-wrap: wrap; gap: 6px; }
+.missed span { background: var(--red-soft); color: var(--red); border-radius: 8px; padding: 3px 9px; font-size: 14px; }
+.missed span em { color: var(--muted); font-style: normal; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+/* verbs view */
+.panel { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+.panel h3 { margin: 0; font-size: 15px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.panel h3 small { font-weight: 400; color: var(--muted); font-size: 13px; }
+.gdesc { margin: -6px 0 0; font-size: 13.5px; color: var(--muted); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { border: 1px solid var(--line); background: transparent; color: var(--muted); border-radius: 999px; padding: 5px 11px; font: 400 15px var(--f-body); cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--card); }
+.mini { border: 0; background: transparent; color: var(--blue); font: 700 13px var(--f-body); cursor: pointer; padding: 4px 2px; }
+.setrow { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.setrow label { font-size: 15px; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 2px; }
+.seg button { border: 0; background: transparent; color: var(--muted); font: 700 13.5px var(--f-body); padding: 6px 11px; border-radius: 999px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--blue-soft); color: var(--blue); }
+.selcount { font-family: var(--f-mono); font-size: 12.5px; color: var(--muted); }
+
+/* stats view */
+.tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.tile { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; }
+.tile b { display: block; font-family: var(--f-mono); font-size: 22px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.tile span { font-size: 12.5px; color: var(--muted); }
+.legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 12.5px; color: var(--muted); align-items: center; }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -2px; margin-right: 4px; }
+.grid { display: flex; flex-direction: column; }
+.srow { display: grid; grid-template-columns: minmax(0, 1fr) repeat(6, 26px) 42px; gap: 4px; align-items: center; padding: 5px 4px; border: 0; background: transparent; color: var(--ink); text-align: left; font: 400 15px var(--f-body); border-bottom: 1px solid var(--line); cursor: pointer; width: 100%; }
+.srow:hover { background: var(--blue-soft); }
+.srow.hdr { cursor: default; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.srow.hdr:hover { background: transparent; }
+.srow .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.srow .pc { text-align: right; font-family: var(--f-mono); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.srow .hc { text-align: center; }
+.cell { width: 26px; height: 22px; border-radius: 5px; border: 1px dashed var(--line); }
+.c0 { background: var(--green-soft); border: 1px solid transparent; }
+.c1 { background: var(--amber-soft); border: 1px solid var(--amber); }
+.c2 { background: var(--red); border: 1px solid var(--red); }
+.danger { color: var(--red); }
+.foot { font-size: 12.5px; color: var(--muted); text-align: center; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="wrap" lang="es">
+  <header class="top">
+    <a class="brand" href="../" aria-label="Todos los tiempos"><span class="arr">←</span><span class="bt">pretérit<b>o</b></span></a>
+    <nav class="tabs" role="tablist">
+      <button id="tab-train" role="tab" aria-selected="true" data-v="train">Practicar</button>
+      <button id="tab-verbs" role="tab" aria-selected="false" data-v="verbs">Verbos</button>
+      <button id="tab-stats" role="tab" aria-selected="false" data-v="stats">Progreso</button>
+    </nav>
+  </header>
+
+  <!-- TRAIN -->
+  <section id="v-train">
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div class="modes" id="modes"></div>
+      <div class="prog"><div class="bar"><i id="bar"></i></div><span id="pcount">0 / 0</span><span class="ok-c" id="pok">✓ 0</span><span class="bad-c" id="pbad">✗ 0</span></div>
+
+      <div class="card" id="card">
+        <div class="head">
+          <div>
+            <div class="verb" id="verb">decir</div>
+            <div class="mean" id="mean" lang="ru">говорить</div>
+          </div>
+          <button class="gtag" id="gtag" type="button"></button>
+        </div>
+        <div class="person" id="person">yo</div>
+        <div class="field" id="field">
+          <span class="pron" id="pron" hidden></span>
+          <input id="stem" placeholder="+" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" lang="es" enterkeyhint="go" aria-label="Raíz común">
+          <input id="end" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" lang="es" enterkeyhint="go" aria-label="Forma verbal" placeholder="forma">
+        </div>
+        <div class="hint" id="hint">Campo azul: la raíz común. Escríbela una vez (p. ej., <b>dij</b>), pulsa Enter o espacio y escribe solo la terminación.</div>
+        <div class="fb" id="fb" aria-live="polite"></div>
+        <div class="keys" id="keys"></div>
+        <div class="acts">
+          <button class="btn ghost" id="skip">No lo sé</button>
+          <button class="btn primary" id="go">Comprobar</button>
+        </div>
+      </div>
+
+      <div class="card done" id="done" hidden>
+        <h2 id="doneTitle">Listo</h2>
+        <p id="doneText"></p>
+        <div class="missed" id="doneMissed"></div>
+        <div class="row2">
+          <button class="btn" id="again">Otra vez</button>
+          <button class="btn primary" id="toHard">Difíciles</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VERBS -->
+  <section id="v-verbs" hidden>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div class="panel">
+        <div class="setrow"><label>Orden</label>
+          <div class="seg" id="seg-order">
+            <button data-o="verb">por verbo</button><button data-o="mix">mezclado</button>
+          </div>
+        </div>
+        <div class="setrow"><label>Forma vosotros</label>
+          <div class="seg" id="seg-vos"><button data-v="1">incluir</button><button data-v="0">omitir</button></div>
+        </div>
+        <div class="setrow"><span class="selcount" id="selcount"></span>
+          <span><button class="mini" id="selAll">todos</button> · <button class="mini" id="selNone">ninguno</button></span>
+        </div>
+      </div>
+      <div id="groups" style="display:flex;flex-direction:column;gap:10px"></div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section id="v-stats" hidden>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div class="tiles">
+        <div class="tile"><b id="t-acc">—</b><span>aciertos a la primera</span></div>
+        <div class="tile"><b id="t-ans">0</b><span>respuestas, <span id="t-today">0</span> hoy</span></div>
+        <div class="tile"><b id="t-hard">0</b><span>formas difíciles</span></div>
+      </div>
+      <div class="panel">
+        <h3>Verbos por persona
+          <span class="seg" id="seg-sort"><button data-s="hard">difíciles</button><button data-s="abc">a–z</button></span>
+        </h3>
+        <div class="legend">
+          <span><i class="cell" style="width:12px;height:12px"></i>sin practicar</span>
+          <span><i class="c0"></i>dominada</span>
+          <span><i class="c1"></i>insegura</span>
+          <span><i class="c2"></i>fallo</span>
+        </div>
+        <div class="grid" id="sgrid"></div>
+        <p class="gdesc" style="margin:0">Toca un verbo para practicar solo ese. A la derecha, el porcentaje de errores total.</p>
+      </div>
+      <button class="btn ghost danger" id="reset">Borrar progreso</button>
+      <p class="foot">Todo se guarda solo en este navegador.</p>
+    </div>
+  </section>
+</div>
+<span class="measure" id="measure"></span>
+
+<script>
+(() => {
+  // Source order of forms: yo, nosotros, tú, vosotros, él, ellos
+  const RAW = [
+    ["almorzar","обедать","Z","almorcé:almorzamos:almorzaste:almorzasteis:almorzó:almorzaron"],
+    ["andar","ходить","F","anduve:anduvimos:anduviste:anduvisteis:anduvo:anduvieron"],
+    ["buscar","искать","Z","busqué:buscamos:buscaste:buscasteis:buscó:buscaron"],
+    ["caber","помещаться","F","cupe:cupimos:cupiste:cupisteis:cupo:cupieron"],
+    ["caer","падать","Y","caí:caímos:caíste:caísteis:cayó:cayeron"],
+    ["chocar","сталкиваться","Z","choqué:chocamos:chocaste:chocasteis:chocó:chocaron"],
+    ["comenzar","начинать","Z","comencé:comenzamos:comenzaste:comenzasteis:comenzó:comenzaron"],
+    ["concluir","заканчивать","Y","concluí:concluimos:concluiste:concluisteis:concluyó:concluyeron"],
+    ["conducir","водить","F","conduje:condujimos:condujiste:condujisteis:condujo:condujeron"],
+    ["construir","строить","Y","construí:construimos:construiste:construisteis:construyó:construyeron"],
+    ["cruzar","пересекать","Z","crucé:cruzamos:cruzaste:cruzasteis:cruzó:cruzaron"],
+    ["decir","говорить","F","dije:dijimos:dijiste:dijisteis:dijo:dijeron"],
+    ["destruir","разрушать","Y","destruí:destruimos:destruiste:destruisteis:destruyó:destruyeron"],
+    ["divertirse","веселиться","V","me divertí:nos divertimos:te divertiste:os divertisteis:se divirtió:se divirtieron"],
+    ["dormir","спать","V","dormí:dormimos:dormiste:dormisteis:durmió:durmieron"],
+    ["empezar","начинать","Z","empecé:empezamos:empezaste:empezasteis:empezó:empezaron"],
+    ["estar","быть, находиться","F","estuve:estuvimos:estuviste:estuvisteis:estuvo:estuvieron"],
+    ["haber","иметь (вспом.)","F","hube:hubimos:hubiste:hubisteis:hubo:hubieron"],
+    ["hacer","делать","F","hice:hicimos:hiciste:hicisteis:hizo:hicieron"],
+    ["huir","убегать","Y","huí:huimos:huiste:huisteis:huyó:huyeron"],
+    ["ir","идти","S","fui:fuimos:fuiste:fuisteis:fue:fueron"],
+    ["jugar","играть","Z","jugué:jugamos:jugaste:jugasteis:jugó:jugaron"],
+    ["leer","читать","Y","leí:leímos:leíste:leísteis:leyó:leyeron"],
+    ["llegar","прибывать","Z","llegué:llegamos:llegaste:llegasteis:llegó:llegaron"],
+    ["mentir","лгать","V","mentí:mentimos:mentiste:mentisteis:mintió:mintieron"],
+    ["morir","умирать","V","morí:morimos:moriste:moristeis:murió:murieron"],
+    ["negar","отрицать","Z","negué:negamos:negaste:negasteis:negó:negaron"],
+    ["oír","слышать","Y","oí:oímos:oíste:oísteis:oyó:oyeron"],
+    ["pagar","платить","Z","pagué:pagamos:pagaste:pagasteis:pagó:pagaron"],
+    ["pedir","просить","V","pedí:pedimos:pediste:pedisteis:pidió:pidieron"],
+    ["poner","класть","F","puse:pusimos:pusiste:pusisteis:puso:pusieron"],
+    ["preferir","предпочитать","V","preferí:preferimos:preferiste:preferisteis:prefirió:prefirieron"],
+    ["producir","производить","F","produje:produjimos:produjiste:produjisteis:produjo:produjeron"],
+    ["querer","хотеть","F","quise:quisimos:quisiste:quisisteis:quiso:quisieron"],
+    ["reírse","смеяться","V","me reí:nos reímos:te reíste:os reísteis:se rió:se rieron"],
+    ["repetir","повторять","V","repetí:repetimos:repetiste:repetisteis:repitió:repitieron"],
+    ["saber","знать","F","supe:supimos:supiste:supisteis:supo:supieron"],
+    ["sacar","вынимать","Z","saqué:sacamos:sacaste:sacasteis:sacó:sacaron"],
+    ["seguir","следовать","V","seguí:seguimos:seguiste:seguisteis:siguió:siguieron"],
+    ["sentir","чувствовать","V","sentí:sentimos:sentiste:sentisteis:sintió:sintieron"],
+    ["ser","быть","S","fui:fuimos:fuiste:fuisteis:fue:fueron"],
+    ["servir","служить, подавать","V","serví:servimos:serviste:servisteis:sirvió:sirvieron"],
+    ["sugerir","предлагать","V","sugerí:sugerimos:sugeriste:sugeristeis:sugirió:sugirieron"],
+    ["tener","иметь","F","tuve:tuvimos:tuviste:tuvisteis:tuvo:tuvieron"],
+    ["tocar","трогать, играть (на)","Z","toqué:tocamos:tocaste:tocasteis:tocó:tocaron"],
+    ["traducir","переводить","F","traduje:tradujimos:tradujiste:tradujisteis:tradujo:tradujeron"],
+    ["traer","приносить","F","traje:trajimos:trajiste:trajisteis:trajo:trajeron"],
+    ["venir","приходить","F","vine:vinimos:viniste:vinisteis:vino:vinieron"],
+    ["ver","видеть","S","vi:vimos:viste:visteis:vio:vieron"],
+    ["vestir","одевать","V","vestí:vestimos:vestiste:vestisteis:vistió:vistieron"],
+  ];
+  const ALT = { "reírse.2": ["rio"] }; // RAE 2010 spelling
+  const PERSONS = ["yo", "tú", "él · ella · usted", "nosotros", "vosotros", "ellos · ustedes"];
+  const PSHORT = ["yo", "tú", "él", "nos", "vos", "ell"];
+  const GROUPS = {
+    F: { name: "Raíz irregular", desc: "Raíz propia y terminaciones sin tilde: anduve, dije, hizo." },
+    S: { name: "ser · ir · ver", desc: "Formas propias: fui, fue, vi, vio." },
+    Z: { name: "-car · -gar · -zar", desc: "Solo cambia yo: busqué, llegué, crucé." },
+    V: { name: "e → i · o → u", desc: "Cambian él y ellos: pidió, durmieron." },
+    Y: { name: "i → y", desc: "él y ellos con y: leyó, construyeron." },
+  };
+  const GORDER = ["F", "S", "Z", "V", "Y"];
+  const HARD = 0.3;
+  const KNOWS_RU = (navigator.languages || [navigator.language || ""]).some((l) => /^ru\b/i.test(l));
+
+  const VERBS = RAW.map(([inf, mean, g, src]) => {
+    const s = src.split(":");
+    const forms = [s[0], s[2], s[4], s[1], s[3], s[5]].map((f) => {
+      const sp = f.lastIndexOf(" ");
+      return sp > 0 ? { pron: f.slice(0, sp), word: f.slice(sp + 1) } : { pron: "", word: f };
+    });
+    return { inf, mean, g, forms };
+  });
+  const VI = Object.fromEntries(VERBS.map((v, i) => [v.inf, i]));
+
+  // ---------- storage ----------
+  const LS = "vdb.preterito.v1";
+  let db;
+  try { db = JSON.parse(localStorage.getItem(LS) || "null"); } catch (e) { db = null; }
+  db = Object.assign({ f: {}, sel: null, vos: true, order: "verb", sort: "hard", days: {} }, db || {});
+  const save = () => { try { localStorage.setItem(LS, JSON.stringify(db)); } catch (e) {} };
+  const selected = () => (db.sel ? db.sel.filter((n) => n in VI) : VERBS.map((v) => v.inf));
+  const persons = () => (db.vos ? [0, 1, 2, 3, 4, 5] : [0, 1, 2, 3, 5]);
+  const today = () => new Date().toISOString().slice(0, 10);
+  const hardKeys = () => Object.entries(db.f).filter(([k, r]) => r.s >= HARD && (db.vos || !k.endsWith(".4")))
+    .sort((a, b) => b[1].s - a[1].s).map(([k]) => k);
+
+  // ---------- helpers ----------
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const norm = (s) => s.normalize("NFC").toLowerCase().replace(/\s+/g, " ").trim();
+  const shuffle = (a) => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  const parseKey = (k) => { const [inf, p] = k.split("."); return { v: VERBS[VI[inf]], p: +p }; };
+
+  function diff(a, b) {
+    const n = a.length, m = b.length, L = Array.from({ length: n + 1 }, () => new Array(m + 1).fill(0));
+    for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--)
+      L[i][j] = a[i] === b[j] ? L[i + 1][j + 1] + 1 : Math.max(L[i + 1][j], L[i][j + 1]);
+    const ka = [], kb = []; let i = 0, j = 0;
+    while (i < n && j < m) {
+      if (a[i] === b[j]) { ka.push([a[i], 0]); kb.push([b[j], 0]); i++; j++; }
+      else if (L[i + 1][j] >= L[i][j + 1]) { ka.push([a[i], 1]); i++; }
+      else { kb.push([b[j], 1]); j++; }
+    }
+    while (i < n) ka.push([a[i++], 1]);
+    while (j < m) kb.push([b[j++], 1]);
+    const paint = (arr, cls) => arr.reduce((h, [c, x]) => h + (x ? `<span class="${cls}">${esc(c)}</span>` : esc(c)), "");
+    return { a: paint(ka, "d-bad"), b: paint(kb, "d-miss") };
+  }
+
+  // keep the phone keyboard open: act on touchstart/mousedown and cancel the focus change
+  function tap(el, fn) {
+    let touched = false;
+    el.addEventListener("touchstart", (e) => { e.preventDefault(); touched = true; fn(); }, { passive: false });
+    el.addEventListener("mousedown", (e) => { e.preventDefault(); if (touched) { touched = false; return; } fn(); });
+    el.addEventListener("click", (e) => { if (e.detail === 0) fn(); });
+  }
+
+  // ---------- session ----------
+  const S = { mode: "all", only: null, queue: [], cur: null, answered: false, okFirst: 0, bad: 0, done: 0, total: 0, missed: new Set(), seenWrong: new Set(), timer: null };
+  let lastField = null;
+
+  function buildDeck() {
+    const ps = persons();
+    if (S.mode === "hard") {
+      const keys = hardKeys().slice(0, 30);
+      return db.order === "verb" ? groupByVerb(keys) : shuffle(keys);
+    }
+    const verbs = S.mode === "verb" ? [S.only] : selected();
+    if (db.order === "verb") return shuffle(verbs.slice()).flatMap((inf) => ps.map((p) => `${inf}.${p}`));
+    return shuffle(verbs.flatMap((inf) => ps.map((p) => `${inf}.${p}`)));
+  }
+  function groupByVerb(keys) {
+    const by = {};
+    keys.forEach((k) => (by[k.split(".")[0]] ||= []).push(k));
+    return shuffle(Object.keys(by)).flatMap((inf) => by[inf].sort((a, b) => a.split(".")[1] - b.split(".")[1]));
+  }
+
+  function startSession(mode, only) {
+    S.cur = null;
+    S.mode = mode; S.only = only || null;
+    S.queue = buildDeck(); S.total = S.queue.length; S.done = 0; S.okFirst = 0; S.bad = 0;
+    S.missed = new Set(); S.seenWrong = new Set();
+    renderModes();
+    next();
+  }
+
+  function next() {
+    clearTimeout(S.timer);
+    S.answered = false;
+    const f = $("field"); f.classList.remove("ok", "bad");
+    $("fb").innerHTML = "";
+    if (!S.queue.length) return finish();
+    $("card").hidden = false; $("done").hidden = true;
+    const prevVerb = S.cur && S.cur.split(".")[0];
+    S.cur = S.queue.shift();
+    const { v, p } = parseKey(S.cur);
+    const form = v.forms[p];
+    $("verb").textContent = v.inf;
+    $("mean").textContent = v.mean;
+    $("mean").hidden = !KNOWS_RU;
+    renderGtag();
+    $("person").textContent = PERSONS[p];
+    $("suf").hidden = !SUFFIX[p]; $("suf").textContent = SUFFIX[p] || "";
+    $("suf").setAttribute("aria-label", `insertar ${SUFFIX[p] || ""}`);
+    $("pron").hidden = !form.pron; $("pron").textContent = form.pron;
+    // the stem lives only while the same verb continues; a new verb starts empty
+    if (prevVerb !== v.inf) $("stem").value = "";
+    $("end").value = "";
+    sizeStem();
+    $("go").textContent = "Comprobar";
+    $("hint").hidden = !!db.stemUsed;
+    renderProgress();
+    if (prevVerb !== v.inf) focusStem(); else focusEnd();
+  }
+
+  function renderGtag() {
+    const g = $("gtag"), on = db.hint !== false;
+    g.classList.toggle("off", !on);
+    g.textContent = on ? GROUPS[parseKey(S.cur).v.g].name : "?";
+    g.setAttribute("aria-label", on ? "Ocultar pista" : "Mostrar pista");
+  }
+
+  function focusStem() { const s = $("stem"); s.focus({ preventScroll: true }); s.setSelectionRange(s.value.length, s.value.length); lastField = s; }
+  function focusEnd() { const e = $("end"); e.focus({ preventScroll: true }); lastField = e; }
+
+  function check(giveUp) {
+    if (S.answered) return next();
+    const { v, p } = parseKey(S.cur);
+    const form = v.forms[p];
+    const stem = $("stem").value.trim();
+    let typed = norm(stem + $("end").value.trim());
+    if (form.pron && typed.startsWith(form.pron + " ")) typed = typed.slice(form.pron.length + 1);
+    if (!giveUp && !typed) { focusEnd(); return; }
+    if (stem) db.stemUsed = true;
+
+    const accepted = [form.word, ...(ALT[S.cur] || [])].map(norm);
+    const ok = !giveUp && accepted.includes(typed);
+    S.answered = true;
+
+    const firstTry = !S.seenWrong.has(S.cur);
+    const r = db.f[S.cur] || (db.f[S.cur] = { a: 0, w: 0, s: 0 });
+    r.a++; r.t = Date.now();
+    const d = db.days[today()] || (db.days[today()] = { a: 0, w: 0 });
+    d.a++;
+    if (ok) {
+      r.s = r.s * 0.5; if (r.s < 0.02) r.s = 0;
+      S.done++; if (firstTry) S.okFirst++;
+      $("field").classList.add("ok");
+      $("fb").innerHTML = `<span class="good">✓ ${esc((form.pron ? form.pron + " " : "") + form.word)}</span>`;
+      $("go").textContent = "Siguiente";
+      S.timer = setTimeout(next, 750);
+    } else {
+      r.w++; r.s = Math.min(r.s + 1, 5); d.w++;
+      S.bad++; S.seenWrong.add(S.cur); S.missed.add(S.cur);
+      S.queue.splice(Math.min(3, S.queue.length), 0, S.cur);
+      $("field").classList.add("bad");
+      const pr = form.pron ? esc(form.pron) + " " : "";
+      if (typed) {
+        const dd = diff(typed, form.word);
+        $("fb").innerHTML = `<div><span class="lbl">tú</span><span class="w">${pr}${dd.a}</span></div><div><span class="lbl">correcto</span><span class="w">${pr}${dd.b}</span></div>`;
+      } else {
+        $("fb").innerHTML = `<div><span class="lbl">correcto</span><span class="w"><span class="d-miss">${pr}${esc(form.word)}</span></span></div>`;
+      }
+      $("fb").insertAdjacentHTML("beforeend", `<div class="tip">Volverá en unas preguntas.</div>`);
+      $("go").textContent = "Siguiente";
+    }
+    save();
+    renderProgress(); renderModes();
+  }
+
+  function finish() {
+    $("card").hidden = true; $("done").hidden = false;
+    const n = S.total;
+    $("doneTitle").textContent = S.bad ? "Ronda terminada" : "Sin errores";
+    $("doneText").textContent = n ? `A la primera: ${S.okFirst} de ${n}.` + (S.missed.size ? " Fallaste en:" : "")
+      : (S.mode === "hard" ? "No hay formas difíciles. Practica primero los verbos seleccionados." : "No hay verbos seleccionados. Márcalos en la pestaña «Verbos».");
+    $("doneMissed").innerHTML = [...S.missed].map((k) => { const { v, p } = parseKey(k); const f = v.forms[p];
+      return `<span>${esc((f.pron ? f.pron + " " : "") + f.word)} <em>${esc(v.inf)}, ${PSHORT[p] === "ell" ? "ellos" : PSHORT[p]}</em></span>`; }).join("");
+    $("toHard").disabled = !hardKeys().length;
+    renderProgress();
+    $("end").blur();
+  }
+
+  // ---------- render ----------
+  function renderProgress() {
+    const finished = !$("done").hidden;
+    const left = S.queue.length + (finished || S.answered ? 0 : 1);
+    const pct = finished ? 100 : S.done + left ? (S.done / (S.done + left)) * 100 : 0;
+    $("bar").style.width = pct + "%";
+    $("pcount").textContent = `${S.done} / ${S.total}`;
+    $("pok").textContent = `✓ ${S.okFirst}`;
+    $("pbad").textContent = `✗ ${S.bad}`;
+  }
+
+  function renderModes() {
+    const h = hardKeys().length;
+    const parts = [
+      `<button class="pill" data-m="all" aria-pressed="${S.mode === "all"}">Seleccionados <span class="n">${selected().length}</span></button>`,
+      `<button class="pill hard" data-m="hard" aria-pressed="${S.mode === "hard"}" ${h || S.mode === "hard" ? "" : "disabled"}>Difíciles <span class="n">${h}</span></button>`,
+    ];
+    if (S.mode === "verb") parts.push(`<button class="pill" data-m="all" aria-pressed="true" aria-label="Volver a todos">${esc(S.only)} <span class="x">×</span></button>`);
+    $("modes").innerHTML = parts.join("");
+  }
+  $("modes").addEventListener("click", (e) => {
+    const b = e.target.closest("button[data-m]"); if (!b || b.disabled) return;
+    startSession(b.dataset.m);
+  });
+
+  function sizeStem() {
+    const s = $("stem"), m = $("measure");
+    m.textContent = s.value || "+";
+    s.style.width = Math.max(m.offsetWidth + 16, s.value ? 0 : 44) + "px";
+  }
+
+  // accent keys
+  const ACC = ["á", "é", "í", "ó", "ú"];
+  $("keys").innerHTML = ACC.map((c) => `<button class="key" type="button" aria-label="insertar ${c}">${c}</button>`).join("")
+    + `<button class="key suf" id="suf" type="button" hidden></button>`;
+  [...$("keys").children].forEach((b, i) => tap(b, () => insert(ACC[i] ?? b.textContent, b)));
+  // ending shortcut for the persons whose ending never changes in the preterite
+  const SUFFIX = { 1: "ste", 3: "mos", 4: "steis" };
+  function insert(ch, btn) {
+    if (S.answered) return;
+    const el = lastField && document.body.contains(lastField) ? lastField : $("end");
+    const st = el.selectionStart ?? el.value.length, en = el.selectionEnd ?? el.value.length;
+    el.value = el.value.slice(0, st) + ch + el.value.slice(en);
+    el.focus({ preventScroll: true });
+    el.setSelectionRange(st + ch.length, st + ch.length);
+    if (el.id === "stem") sizeStem();
+    btn.classList.add("flash"); setTimeout(() => btn.classList.remove("flash"), 120);
+  }
+
+  ["stem", "end"].forEach((id) => {
+    const el = $(id);
+    el.addEventListener("focus", () => (lastField = el));
+    el.addEventListener("beforeinput", (e) => { if (S.answered && e.inputType !== "insertLineBreak") e.preventDefault(); });
+    el.addEventListener("keydown", (e) => {
+      // from the stem, Enter/space jumps to the ending while the ending is still empty
+      if (id === "stem" && !S.answered && (e.key === "Enter" || e.key === " ") && !$("end").value.trim()) { e.preventDefault(); return focusEnd(); }
+      if (e.key === "Enter") { e.preventDefault(); check(false); }
+    });
+  });
+  tap($("gtag"), () => { if (!S.cur) return; db.hint = db.hint === false; save(); renderGtag(); });
+  $("stem").addEventListener("input", () => {
+    const st = $("stem");
+    // Android keyboards don't report space in keydown, so catch it here
+    if (st.value.endsWith(" ")) { st.value = st.value.trimEnd(); sizeStem(); return focusEnd(); }
+    sizeStem();
+  });
+  tap($("go"), () => check(false));
+  tap($("skip"), () => { if (!S.answered) check(true); else next(); });
+  $("again").addEventListener("click", () => { startSession(S.mode, S.only); });
+  $("toHard").addEventListener("click", () => startSession("hard"));
+
+  // ---------- tabs ----------
+  let dirty = false;
+  function show(view) {
+    ["train", "verbs", "stats"].forEach((v) => {
+      $("v-" + v).hidden = v !== view;
+      $("tab-" + v).setAttribute("aria-selected", v === view);
+    });
+    if (view === "verbs") renderVerbs();
+    if (view === "stats") renderStats();
+    if (view === "train") {
+      if (dirty && S.mode === "all") { dirty = false; startSession("all"); }
+      else { renderModes(); if ($("done").hidden) focusEnd(); }
+    }
+  }
+  document.querySelector(".tabs").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) show(b.dataset.v); });
+
+  // ---------- verbs view ----------
+  function renderVerbs() {
+    const sel = new Set(selected());
+    $("selcount").textContent = `${sel.size} de ${VERBS.length} seleccionados`;
+    $("groups").innerHTML = GORDER.map((g) => {
+      const vs = VERBS.filter((v) => v.g === g);
+      const all = vs.every((v) => sel.has(v.inf));
+      return `<div class="panel"><h3>${GROUPS[g].name} <button class="mini" data-g="${g}">${all ? "ninguno" : "todos"}</button></h3>
+        <p class="gdesc">${GROUPS[g].desc}</p>
+        <div class="chips">${vs.map((v) => `<button class="chip" data-v="${v.inf}" aria-pressed="${sel.has(v.inf)}">${v.inf}</button>`).join("")}</div></div>`;
+    }).join("");
+    [...$("seg-order").children].forEach((b) => b.setAttribute("aria-pressed", b.dataset.o === db.order));
+    [...$("seg-vos").children].forEach((b) => b.setAttribute("aria-pressed", (b.dataset.v === "1") === db.vos));
+  }
+  function setSel(set) { db.sel = VERBS.map((v) => v.inf).filter((n) => set.has(n)); dirty = true; save(); renderVerbs(); }
+  $("groups").addEventListener("click", (e) => {
+    const sel = new Set(selected());
+    const c = e.target.closest(".chip");
+    if (c) { sel.has(c.dataset.v) ? sel.delete(c.dataset.v) : sel.add(c.dataset.v); return setSel(sel); }
+    const g = e.target.closest("[data-g]");
+    if (g) {
+      const vs = VERBS.filter((v) => v.g === g.dataset.g).map((v) => v.inf);
+      const all = vs.every((n) => sel.has(n));
+      vs.forEach((n) => (all ? sel.delete(n) : sel.add(n)));
+      setSel(sel);
+    }
+  });
+  $("selAll").addEventListener("click", () => setSel(new Set(VERBS.map((v) => v.inf))));
+  $("selNone").addEventListener("click", () => setSel(new Set()));
+  $("seg-order").addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; db.order = b.dataset.o; dirty = true; save(); renderVerbs(); });
+  $("seg-vos").addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; db.vos = b.dataset.v === "1"; dirty = true; save(); renderVerbs(); });
+
+  // ---------- stats view ----------
+  function level(r) { if (!r) return ""; return r.s >= 0.6 ? "c2" : r.s >= 0.15 ? "c1" : "c0"; }
+  function renderStats() {
+    let a = 0, w = 0;
+    Object.values(db.f).forEach((r) => { a += r.a; w += r.w; });
+    // accuracy = share of answers that were right
+    $("t-acc").textContent = a ? Math.round(((a - w) / a) * 100) + "%" : "—";
+    $("t-ans").textContent = a;
+    $("t-today").textContent = (db.days[today()] || { a: 0 }).a;
+    $("t-hard").textContent = hardKeys().length;
+    [...$("seg-sort").children].forEach((b) => b.setAttribute("aria-pressed", b.dataset.s === db.sort));
+
+    const rows = VERBS.map((v) => {
+      const rs = [0, 1, 2, 3, 4, 5].map((p) => db.f[`${v.inf}.${p}`]);
+      const sa = rs.reduce((x, r) => x + (r ? r.a : 0), 0), sw = rs.reduce((x, r) => x + (r ? r.w : 0), 0);
+      const score = rs.reduce((x, r) => x + (r ? r.s : 0), 0);
+      return { v, rs, sa, sw, score };
+    });
+    if (db.sort === "hard") rows.sort((x, y) => y.score - x.score || (y.sa ? y.sw / y.sa : 0) - (x.sa ? x.sw / x.sa : 0) || x.v.inf.localeCompare(y.v.inf));
+    $("sgrid").innerHTML =
+      `<div class="srow hdr"><span>verbo</span>${PSHORT.map((p, i) => `<span class="hc"${!db.vos && i === 4 ? ' style="opacity:.4"' : ""}>${p}</span>`).join("")}<span class="pc">err.</span></div>` +
+      rows.map(({ v, rs, sa, sw }) => `<button class="srow" data-v="${v.inf}"><span class="nm">${v.inf}</span>${rs.map((r, p) =>
+        `<span class="cell ${level(r)}" title="${PERSONS[p]}: ${r ? `${r.a} resp., ${r.w} err.` : "sin practicar"}"></span>`).join("")}<span class="pc">${sa ? Math.round((sw / sa) * 100) + "%" : "—"}</span></button>`).join("");
+  }
+  $("seg-sort").addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; db.sort = b.dataset.s; save(); renderStats(); });
+  $("sgrid").addEventListener("click", (e) => { const r = e.target.closest(".srow[data-v]"); if (!r) return; show("train"); startSession("verb", r.dataset.v); });
+  let resetArmed = null;
+  $("reset").addEventListener("click", () => {
+    const b = $("reset");
+    if (!resetArmed) { b.textContent = "¿Seguro? Toca otra vez"; resetArmed = setTimeout(() => { resetArmed = null; b.textContent = "Borrar progreso"; }, 3500); return; }
+    clearTimeout(resetArmed); resetArmed = null;
+    db.f = {}; db.days = {}; save(); b.textContent = "Progreso borrado";
+    setTimeout(() => (b.textContent = "Borrar progreso"), 2000);
+    renderStats(); renderModes();
+  });
+
+  startSession("all");
+})();
+</script>
+</body>
+</html>
