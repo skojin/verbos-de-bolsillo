@@ -441,8 +441,13 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--blue); outl
       return db.order === "verb" ? groupByVerb(keys) : shuffle(keys);
     }
     const verbs = S.mode === "verb" ? [S.only] : selected();
-    if (db.order === "verb") return shuffle(verbs.slice()).flatMap((inf) => ps.map((p) => `${inf}.${p}`));
-    return shuffle(verbs.flatMap((inf) => ps.map((p) => `${inf}.${p}`)));
+    // never-practised first, then least recently practised; random among equals
+    const seen = (k) => (db.f[k] && db.f[k].t) || 0;
+    if (db.order === "verb") {
+      const last = (inf) => Math.max(...ps.map((p) => seen(`${inf}.${p}`)));
+      return shuffle(verbs.slice()).sort((a, b) => last(a) - last(b)).flatMap((inf) => ps.map((p) => `${inf}.${p}`));
+    }
+    return shuffle(verbs.flatMap((inf) => ps.map((p) => `${inf}.${p}`))).sort((a, b) => seen(a) - seen(b));
   }
   function groupByVerb(keys) {
     const by = {};
