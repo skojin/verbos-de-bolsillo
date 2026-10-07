@@ -68,7 +68,8 @@ body {
   line-height: 1.45;
   -webkit-tap-highlight-color: transparent;
 }
-.wrap { max-width: 520px; margin: 0 auto; padding: 10px 16px 40px; display: flex; flex-direction: column; gap: 12px; }
+/* tall bottom space: the card can be scrolled up and stays put when content below changes */
+.wrap { max-width: 520px; margin: 0 auto; padding: 10px 16px 70vh; display: flex; flex-direction: column; gap: 12px; }
 
 /* top bar */
 .top { display: flex; align-items: center; gap: 12px; }
@@ -132,13 +133,12 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--blue); outl
 .measure { position: absolute; visibility: hidden; white-space: pre; font: 400 23px var(--f-body); }
 .hint { font-size: 13px; color: var(--muted); margin-top: -4px; }
 
-.fb { min-height: 52px; display: flex; flex-direction: column; gap: 2px; font-size: 17px; }
+.fb { height: 62px; display: flex; flex-direction: column; gap: 2px; font-size: 17px; }
 .fb .lbl { display: inline-block; width: 5.4em; font-size: 13px; color: var(--muted); }
 .fb .w { font-size: 20px; letter-spacing: .01em; }
 .d-bad { color: var(--red); text-decoration: line-through; text-decoration-thickness: 2px; }
 .d-miss { color: var(--blue); font-weight: 700; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; }
 .fb .good { color: var(--green); font-weight: 700; font-size: 20px; }
-.fb .tip { font-size: 13px; color: var(--muted); }
 
 .keys { display: flex; gap: 6px; }
 .keys .key { flex: 1 1 0; min-width: 0; }
@@ -536,7 +536,6 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--blue); outl
       } else {
         $("fb").innerHTML = `<div><span class="lbl">correcto</span><span class="w"><span class="d-miss">${pr}${esc(form.word)}</span></span></div>`;
       }
-      $("fb").insertAdjacentHTML("beforeend", `<div class="tip">Volverá en unas preguntas.</div>`);
       $("go").textContent = "Siguiente";
     }
     save();
