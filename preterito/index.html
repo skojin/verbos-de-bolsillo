@@ -518,7 +518,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--blue); outl
     } else {
       r.w++; r.s = Math.min(r.s + 1, 5); d.w++;
       S.bad++; S.seenWrong.add(S.cur); S.missed.add(S.cur);
-      S.queue.splice(Math.min(3, S.queue.length), 0, S.cur);
+      S.queue.splice(requeueAt(v.inf), 0, S.cur);
       $("field").classList.add("bad");
       const pr = form.pron ? esc(form.pron) + " " : "";
       if (typed) {
@@ -532,6 +532,15 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--blue); outl
     }
     save();
     renderProgress(); renderModes();
+  }
+
+  // grouped by verb: a missed form comes back at the end of the verb's block,
+  // so the next verb starts only after all its forms are right
+  function requeueAt(inf) {
+    if (db.order !== "verb" && S.mode !== "verb") return Math.min(3, S.queue.length);
+    let n = 0;
+    while (n < S.queue.length && S.queue[n].split(".")[0] === inf) n++;
+    return n;
   }
 
   function finish() {
