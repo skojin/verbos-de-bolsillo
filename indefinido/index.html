@@ -6,9 +6,9 @@
 <meta name="theme-color" content="#f3f6fb" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0e1322" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Pretérito">
+<meta name="apple-mobile-web-app-title" content="Indefinido">
 <style>:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }</style>
-<title>Pretérito · Verbos de bolsillo</title>
+<title>Indefinido · Verbos de bolsillo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@500&display=swap">
@@ -202,7 +202,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--blue); outl
 
 <div class="wrap" lang="es">
   <header class="top">
-    <a class="brand" href="../" aria-label="Todos los tiempos"><span class="arr">←</span><span class="bt">pretérit<b>o</b></span></a>
+    <a class="brand" href="../" aria-label="Todos los tiempos"><span class="arr">←</span><span class="bt">indefinid<b>o</b></span></a>
     <nav class="tabs" role="tablist">
       <button id="tab-train" role="tab" aria-selected="true" data-v="train">Practicar</button>
       <button id="tab-verbs" role="tab" aria-selected="false" data-v="verbs">Verbos</button>
@@ -379,7 +379,15 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--blue); outl
   const VI = Object.fromEntries(VERBS.map((v, i) => [v.inf, i]));
 
   // ---------- storage ----------
-  const LS = "vdb.preterito.v1";
+  const LS = "vdb.indefinido.v1";
+  // TODO: drop this migration once old /preterito/ visitors have moved over
+  try {
+    const old = localStorage.getItem("vdb.preterito.v1");
+    if (old !== null) {
+      if (localStorage.getItem(LS) === null) localStorage.setItem(LS, old);
+      localStorage.removeItem("vdb.preterito.v1");
+    }
+  } catch (e) {}
   let db;
   try { db = JSON.parse(localStorage.getItem(LS) || "null"); } catch (e) { db = null; }
   db = Object.assign({ f: {}, sel: null, vos: true, order: "verb", sort: "hard", days: {} }, db || {});
