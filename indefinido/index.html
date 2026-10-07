@@ -458,6 +458,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--blue); outl
   function startSession(mode, only) {
     S.cur = null;
     S.mode = mode; S.only = only || null;
+    if (mode !== "verb" && db.mode !== mode) { db.mode = mode; save(); }
     S.queue = buildDeck(); S.total = S.queue.length; S.done = 0; S.okFirst = 0; S.bad = 0;
     S.missed = new Set(); S.seenWrong = new Set();
     renderModes();
@@ -735,7 +736,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--blue); outl
     renderStats(); renderModes();
   });
 
-  startSession("all");
+  startSession(db.mode === "hard" && hardKeys().length ? "hard" : "all");
 })();
 </script>
 </body>
