@@ -496,7 +496,8 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--blue); outl
     const stem = $("stem").value.trim();
     let typed = norm(stem + $("end").value.trim());
     if (form.pron && typed.startsWith(form.pron + " ")) typed = typed.slice(form.pron.length + 1);
-    if (!giveUp && !typed) { focusEnd(); return; }
+    // an empty ending is an accidental tap, even with a stem filled in
+    if (!giveUp && !$("end").value.trim()) { focusEnd(); return; }
     if (stem) db.stemUsed = true;
 
     const accepted = [form.word, ...(ALT[S.cur] || [])].map(norm);
