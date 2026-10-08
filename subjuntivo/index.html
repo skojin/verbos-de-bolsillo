@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f3f6fb" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1322" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Subjuntivo">
+<style>:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }</style>
+<title>Subjuntivo · Verbos de bolsillo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="../assets/trainer.css">
+</head>
+<body>
+<script>
+window.TRAINER = {
+  key: "subjuntivo",
+  brand: "subjuntivo",
+  stemExample: "teng",
+  personPrefix: "que ",
+  accents: ["á", "é", "í"],
+  suffix: { 3: "mos", 4: "is" },
+  alt: { "reírse.4": ["riais"] }, // RAE 2010 spelling
+  // nosotros and vosotros lose the stem change (podamos), the rest keep it (pueda)
+  personOrder: [0, 1, 2, 5, 3, 4],
+  stemSlots: [0, 0, 0, 1, 1, 0],
+  groupOrder: ["Y", "B", "R", "I", "Z", "U", "S"],
+  groups: {
+    Y: { name: "Raíz del yo", desc: "Sale del yo del presente: hago → haga, conozco → conozca." },
+    B: { name: "e → ie · o → ue", desc: "Como en presente; nosotros y vosotros sin cambio: pueda, podamos." },
+    R: { name: "-ir con cambio", desc: "Además e → i, o → u en nosotros y vosotros: duerma, durmamos." },
+    I: { name: "e → i", desc: "En todas las formas: pida, sigamos, se ría." },
+    Z: { name: "-car · -gar · -zar", desc: "c → qu, g → gu: busque, pague, saque." },
+    U: { name: "i → y", desc: "concluya, destruyan." },
+    S: { name: "Formas propias", desc: "dé, esté, haya, vaya, sepa, sea." },
+  },
+  // [infinitive, ru, en, group, forms in source order: yo:nosotros:tú:vosotros:él:ellos]
+  verbs: [
+    ["almorzar", "обедать", "to have lunch", "B", "almuerce:almorcemos:almuerces:almorcéis:almuerce:almuercen"],
+    ["buscar", "искать", "to look for", "Z", "busque:busquemos:busques:busquéis:busque:busquen"],
+    ["caber", "помещаться", "to fit", "Y", "quepa:quepamos:quepas:quepáis:quepa:quepan"],
+    ["caer", "падать", "to fall", "Y", "caiga:caigamos:caigas:caigáis:caiga:caigan"],
+    ["competir", "соревноваться", "to compete", "I", "compita:compitamos:compitas:compitáis:compita:compitan"],
+    ["concluir", "заканчивать", "to conclude", "U", "concluya:concluyamos:concluyas:concluyáis:concluya:concluyan"],
+    ["conocer", "знать (быть знакомым)", "to know (be familiar with)", "Y", "conozca:conozcamos:conozcas:conozcáis:conozca:conozcan"],
+    ["dar", "давать", "to give", "S", "dé:demos:des:deis:dé:den"],
+    ["decir", "говорить", "to say", "Y", "diga:digamos:digas:digáis:diga:digan"],
+    ["destruir", "разрушать", "to destroy", "U", "destruya:destruyamos:destruyas:destruyáis:destruya:destruyan"],
+    ["divertirse", "веселиться", "to have fun", "R", "me divierta:nos divirtamos:te diviertas:os divirtáis:se divierta:se diviertan"],
+    ["dormir", "спать", "to sleep", "R", "duerma:durmamos:duermas:durmáis:duerma:duerman"],
+    ["elegir", "выбирать", "to choose", "Y", "elija:elijamos:elijas:elijáis:elija:elijan"],
+    ["empezar", "начинать", "to start", "B", "empiece:empecemos:empieces:empecéis:empiece:empiecen"],
+    ["escoger", "выбирать", "to pick", "Y", "escoja:escojamos:escojas:escojáis:escoja:escojan"],
+    ["estar", "быть, находиться", "to be (state, place)", "S", "esté:estemos:estés:estéis:esté:estén"],
+    ["explicar", "объяснять", "to explain", "Z", "explique:expliquemos:expliques:expliquéis:explique:expliquen"],
+    ["haber", "иметь (вспом.)", "to have (aux.)", "S", "haya:hayamos:hayas:hayáis:haya:hayan"],
+    ["hacer", "делать", "to do, to make", "Y", "haga:hagamos:hagas:hagáis:haga:hagan"],
+    ["ir", "идти", "to go", "S", "vaya:vayamos:vayas:vayáis:vaya:vayan"],
+    ["jugar", "играть", "to play", "B", "juegue:juguemos:juegues:juguéis:juegue:jueguen"],
+    ["llegar", "прибывать", "to arrive", "Z", "llegue:lleguemos:llegues:lleguéis:llegue:lleguen"],
+    ["mentir", "лгать", "to lie", "R", "mienta:mintamos:mientas:mintáis:mienta:mientan"],
+    ["morir", "умирать", "to die", "R", "muera:muramos:mueras:muráis:muera:mueran"],
+    ["ofrecer", "предлагать", "to offer", "Y", "ofrezca:ofrezcamos:ofrezcas:ofrezcáis:ofrezca:ofrezcan"],
+    ["oír", "слышать", "to hear", "Y", "oiga:oigamos:oigas:oigáis:oiga:oigan"],
+    ["pagar", "платить", "to pay", "Z", "pague:paguemos:pagues:paguéis:pague:paguen"],
+    ["pedir", "просить", "to ask for", "I", "pida:pidamos:pidas:pidáis:pida:pidan"],
+    ["poder", "мочь", "to be able to", "B", "pueda:podamos:puedas:podáis:pueda:puedan"],
+    ["poner", "класть", "to put", "Y", "ponga:pongamos:pongas:pongáis:ponga:pongan"],
+    ["preferir", "предпочитать", "to prefer", "R", "prefiera:prefiramos:prefieras:prefiráis:prefiera:prefieran"],
+    ["querer", "хотеть", "to want", "B", "quiera:queramos:quieras:queráis:quiera:quieran"],
+    ["reírse", "смеяться", "to laugh", "I", "me ría:nos riamos:te rías:os riáis:se ría:se rían"],
+    ["repetir", "повторять", "to repeat", "I", "repita:repitamos:repitas:repitáis:repita:repitan"],
+    ["saber", "знать", "to know", "S", "sepa:sepamos:sepas:sepáis:sepa:sepan"],
+    ["sacar", "вынимать", "to take out", "Z", "saque:saquemos:saques:saquéis:saque:saquen"],
+    ["salir", "выходить", "to go out", "Y", "salga:salgamos:salgas:salgáis:salga:salgan"],
+    ["seguir", "следовать, продолжать", "to follow, to keep on", "I", "siga:sigamos:sigas:sigáis:siga:sigan"],
+    ["sentarse", "садиться", "to sit down", "B", "me siente:nos sentemos:te sientes:os sentéis:se siente:se sienten"],
+    ["sentir", "чувствовать", "to feel", "R", "sienta:sintamos:sientas:sintáis:sienta:sientan"],
+    ["ser", "быть", "to be", "S", "sea:seamos:seas:seáis:sea:sean"],
+    ["servir", "служить, подавать", "to serve", "I", "sirva:sirvamos:sirvas:sirváis:sirva:sirvan"],
+    ["sugerir", "предлагать", "to suggest", "R", "sugiera:sugiramos:sugieras:sugiráis:sugiera:sugieran"],
+    ["tener", "иметь", "to have", "Y", "tenga:tengamos:tengas:tengáis:tenga:tengan"],
+    ["traducir", "переводить", "to translate", "Y", "traduzca:traduzcamos:traduzcas:traduzcáis:traduzca:traduzcan"],
+    ["traer", "приносить", "to bring", "Y", "traiga:traigamos:traigas:traigáis:traiga:traigan"],
+    ["venir", "приходить", "to come", "Y", "venga:vengamos:vengas:vengáis:venga:vengan"],
+    ["ver", "видеть", "to see", "Y", "vea:veamos:veas:veáis:vea:vean"],
+    ["vestirse", "одеваться", "to get dressed", "I", "me vista:nos vistamos:te vistas:os vistáis:se vista:se vistan"],
+    ["volver", "возвращаться", "to return", "B", "vuelva:volvamos:vuelvas:volváis:vuelva:vuelvan"],
+  ],
+};
+</script>
+<script src="../assets/trainer.js"></script>
+</body>
+</html>

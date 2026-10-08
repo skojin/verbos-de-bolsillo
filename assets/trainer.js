@@ -226,7 +226,7 @@
     $("verb").textContent = v.inf;
     renderMean();
     renderGtag();
-    $("person").textContent = PERSONS[p];
+    $("person").textContent = (T.personPrefix || "") + PERSONS[p];
     $("suf").hidden = !SUFFIX[p]; $("suf").textContent = SUFFIX[p] || "";
     $("suf").setAttribute("aria-label", `insertar ${SUFFIX[p] || ""}`);
     $("pron").hidden = !form.pron; $("pron").textContent = form.pron;
