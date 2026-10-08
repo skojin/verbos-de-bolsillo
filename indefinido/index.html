@@ -251,7 +251,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--blue); outl
         </div>
       </div>
 
-      <div class="prog"><div class="bar"><i id="bar"></i></div><span id="pcount">0 / 0</span><span class="ok-c" id="pok">✓ 0</span><span class="bad-c" id="pbad">✗ 0</span></div>
+      <div class="prog"><div class="bar" title="Formas dominadas"><i id="bar"></i></div><span id="pcount" title="Formas dominadas">0 / 0</span><span>hoy</span><span class="ok-c" id="pok">✓ 0</span><span class="bad-c" id="pbad">✗ 0</span></div>
       <div class="modes" id="modes"></div>
     </div>
   </section>
@@ -621,14 +621,15 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--blue); outl
   }
 
   // ---------- render ----------
+  // overall: forms of the selected verbs that are answered and not shaky; plus today's answers
   function renderProgress() {
-    const finished = !$("done").hidden;
-    const left = S.queue.length + (finished || S.answered ? 0 : 1);
-    const pct = finished ? 100 : S.done + left ? (S.done / (S.done + left)) * 100 : 0;
-    $("bar").style.width = pct + "%";
-    $("pcount").textContent = `${S.done} / ${S.total}`;
-    $("pok").textContent = `✓ ${S.okFirst}`;
-    $("pbad").textContent = `✗ ${S.bad}`;
+    const keys = selected().flatMap((inf) => persons().map((p) => `${inf}.${p}`));
+    const known = keys.filter((k) => level(db.f[k]) === "c0").length;
+    $("bar").style.width = (keys.length ? (known / keys.length) * 100 : 0) + "%";
+    $("pcount").textContent = `${known} / ${keys.length}`;
+    const d = db.days[today()] || { a: 0, w: 0 };
+    $("pok").textContent = `✓ ${d.a - d.w}`;
+    $("pbad").textContent = `✗ ${d.w}`;
   }
 
   function renderModes() {
