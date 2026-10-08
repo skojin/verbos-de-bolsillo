@@ -6,6 +6,7 @@ Pocket Spanish verb conjugation trainer for the phone: one form at a time.
 
 ## Trainers
 
+- [Presente](https://skojin.github.io/verbos-de-bolsillo/presente/): 56 irregular and stem-changing verbs.
 - [Pretérito indefinido](https://skojin.github.io/verbos-de-bolsillo/indefinido/): 50 irregular and stem-changing verbs.
 
 ## Features
