@@ -222,7 +222,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--blue); outl
         <div class="head">
           <div>
             <div class="verb" id="verb">decir</div>
-            <div class="mean" id="mean" lang="ru">говорить</div>
+            <div class="mean" id="mean"></div>
           </div>
           <button class="gtag" id="gtag" type="button"></button>
         </div>
@@ -371,7 +371,61 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--blue); outl
   };
   const GORDER = ["F", "S", "Z", "V", "Y"];
   const HARD = 0.3;
-  const KNOWS_RU = (navigator.languages || [navigator.language || ""]).some((l) => /^ru\b/i.test(l));
+  const EN = {
+    "almorzar": "to have lunch",
+    "andar": "to walk",
+    "buscar": "to look for",
+    "caber": "to fit",
+    "caer": "to fall",
+    "chocar": "to crash",
+    "comenzar": "to begin",
+    "concluir": "to conclude",
+    "conducir": "to drive",
+    "construir": "to build",
+    "cruzar": "to cross",
+    "decir": "to say",
+    "destruir": "to destroy",
+    "divertirse": "to have fun",
+    "dormir": "to sleep",
+    "empezar": "to start",
+    "estar": "to be (state, place)",
+    "haber": "to have (aux.)",
+    "hacer": "to do, to make",
+    "huir": "to flee",
+    "ir": "to go",
+    "jugar": "to play",
+    "leer": "to read",
+    "llegar": "to arrive",
+    "mentir": "to lie",
+    "morir": "to die",
+    "negar": "to deny",
+    "oír": "to hear",
+    "pagar": "to pay",
+    "pedir": "to ask for",
+    "poner": "to put",
+    "preferir": "to prefer",
+    "producir": "to produce",
+    "querer": "to want",
+    "reírse": "to laugh",
+    "repetir": "to repeat",
+    "saber": "to know",
+    "sacar": "to take out",
+    "seguir": "to follow",
+    "sentir": "to feel",
+    "ser": "to be",
+    "servir": "to serve",
+    "sugerir": "to suggest",
+    "tener": "to have",
+    "tocar": "to touch, to play (an instrument)",
+    "traducir": "to translate",
+    "traer": "to bring",
+    "venir": "to come",
+    "ver": "to see",
+    "vestir": "to dress",
+  };
+  // translations shown only for languages the browser lists, in its order of preference
+  const GLOSS = (navigator.languages || [navigator.language || ""]).map((l) => l.slice(0, 2).toLowerCase())
+    .filter((l, i, a) => (l === "ru" || l === "en") && a.indexOf(l) === i);
 
   const VERBS = RAW.map(([inf, mean, g, src]) => {
     const s = src.split(":");
@@ -637,11 +691,12 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--blue); outl
   });
   function renderMean() {
     const m = $("mean"), on = db.meaning !== false;
-    m.hidden = !KNOWS_RU || !on;
-    $("verb").classList.toggle("tg", KNOWS_RU);
-    m.textContent = parseKey(S.cur).v.mean;
+    const v = parseKey(S.cur).v;
+    m.hidden = !GLOSS.length || !on;
+    $("verb").classList.toggle("tg", GLOSS.length > 0);
+    m.innerHTML = GLOSS.map((l) => `<span lang="${l}">${esc(l === "ru" ? v.mean : EN[v.inf])}</span>`).join(" · ");
   }
-  const toggleMean = () => { if (!S.cur || !KNOWS_RU) return; db.meaning = db.meaning === false; save(); renderMean(); };
+  const toggleMean = () => { if (!S.cur || !GLOSS.length) return; db.meaning = db.meaning === false; save(); renderMean(); };
   tap($("verb"), toggleMean);
   tap($("mean"), toggleMean);
   tap($("gtag"), () => { if (!S.cur) return; db.hint = db.hint === false; save(); renderGtag(); });
