@@ -3,7 +3,8 @@
   const T = window.TRAINER;
   // forms come in the source order: yo, nosotros, tú, vosotros, él, ellos
   const VERBS = T.verbs.map(([inf, ru, en, g, src]) => {
-    const s = src.split(":");
+    // endings: the verb gives only its stem and every person adds the shared ending
+    const s = T.endings ? [0, 3, 1, 4, 2, 5].map((i) => src + T.endings[i]) : src.split(":");
     const forms = [s[0], s[2], s[4], s[1], s[3], s[5]].map((f) => {
       const sp = f.lastIndexOf(" ");
       return sp > 0 ? { pron: f.slice(0, sp), word: f.slice(sp + 1) } : { pron: "", word: f };
@@ -21,7 +22,9 @@
   const ORDER = T.personOrder || [0, 1, 2, 3, 4, 5];
   const SLOT = T.stemSlots || [0, 0, 0, 0, 0, 0];
   // endFirst: the stem is optional, every form starts in the ending field
-  const STEM_FIRST = !T.endFirst;
+  // perVerb: one card per verb in a random person, progress kept per verb; a single input field
+  const PER_VERB = !!T.perVerb;
+  const STEM_FIRST = !T.endFirst && !PER_VERB;
   const PERSONS = ["yo", "tú", "él · ella · usted", "nosotros", "vosotros", "ellos · ustedes"];
   const PSHORT = ["yo", "tú", "él", "nos", "vos", "ell"];
   const HARD = 0.3;
@@ -151,6 +154,8 @@
   const $ = (id) => document.getElementById(id);
   const norm = (s) => s.normalize("NFC").toLowerCase().replace(/\s+/g, " ").trim();
   const shuffle = (a) => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  const rec = (k) => (PER_VERB ? k.split(".")[0] : k);
+  const randomCard = (inf) => { const ps = persons(); return `${inf}.${ps[Math.floor(Math.random() * ps.length)]}`; };
   const parseKey = (k) => { const [inf, p] = k.split("."); return { v: VERBS[VI[inf]], p: +p }; };
 
   function diff(a, b) {
@@ -184,6 +189,11 @@
 
   function buildDeck() {
     const ps = persons();
+    if (PER_VERB) {
+      const verbs = S.mode === "hard" ? hardKeys().slice(0, 30) : S.mode === "verb" ? [S.only] : selected();
+      const seen = (inf) => (db.f[inf] && db.f[inf].t) || 0;
+      return shuffle(verbs.slice()).sort((a, b) => seen(a) - seen(b)).map(randomCard);
+    }
     if (S.mode === "hard") {
       const keys = hardKeys().slice(0, 30);
       return db.order === "verb" ? groupByVerb(keys) : shuffle(keys);
@@ -244,7 +254,7 @@
     sizeStem();
     $("go").textContent = "Comprobar";
     updateGo();
-    $("hint").hidden = !!db.stemUsed;
+    $("hint").hidden = PER_VERB || !!db.stemUsed;
     renderProgress();
     if (STEM_FIRST && slotChanged && !$("stem").value && S.mode !== "hard") focusStem(); else focusEnd();
   }
@@ -275,8 +285,8 @@
     const ok = !giveUp && accepted.includes(typed);
     S.answered = true;
 
-    const firstTry = !S.seenWrong.has(S.cur);
-    const r = db.f[S.cur] || (db.f[S.cur] = { a: 0, w: 0, s: 0 });
+    const firstTry = !S.seenWrong.has(rec(S.cur));
+    const r = db.f[rec(S.cur)] || (db.f[rec(S.cur)] = { a: 0, w: 0, s: 0 });
     r.a++; r.t = Date.now();
     const d = db.days[today()] || (db.days[today()] = { a: 0, w: 0 });
     d.a++;
@@ -289,8 +299,9 @@
       S.timer = setTimeout(next, 750);
     } else {
       r.w++; r.s = Math.min(r.s + 1, 5); d.w++;
-      S.bad++; S.seenWrong.add(S.cur); S.missed.add(S.cur);
-      S.queue.splice(requeueAt(v.inf), 0, S.cur);
+      S.bad++; S.seenWrong.add(rec(S.cur)); S.missed.add(S.cur);
+      // perVerb: the verb comes back in another random person
+      S.queue.splice(requeueAt(v.inf), 0, PER_VERB ? randomCard(v.inf) : S.cur);
       $("field").classList.add("bad");
       const pr = form.pron ? esc(form.pron) + " " : "";
       if (typed) {
@@ -308,7 +319,7 @@
   // grouped by verb: a missed form comes back at the end of the verb's block,
   // so the next verb starts only after all its forms are right
   function requeueAt(inf) {
-    if (db.order !== "verb" && S.mode !== "verb") return Math.min(3, S.queue.length);
+    if (PER_VERB || (db.order !== "verb" && S.mode !== "verb")) return Math.min(3, S.queue.length);
     let n = 0;
     while (n < S.queue.length && S.queue[n].split(".")[0] === inf) n++;
     return n;
@@ -330,7 +341,7 @@
   // ---------- render ----------
   // overall: forms of the selected verbs that are answered and not shaky; plus today's answers
   function renderProgress() {
-    const keys = selected().flatMap((inf) => persons().map((p) => `${inf}.${p}`));
+    const keys = PER_VERB ? selected() : selected().flatMap((inf) => persons().map((p) => `${inf}.${p}`));
     const known = keys.filter((k) => level(db.f[k]) === "c0").length;
     $("bar").style.width = (keys.length ? (known / keys.length) * 100 : 0) + "%";
     $("pcount").textContent = `${known} / ${keys.length}`;
@@ -385,7 +396,7 @@
       // from the stem, Enter/space jumps to the ending while the ending is still empty
       if (id === "stem" && !S.answered && (e.key === "Enter" || e.key === " ") && !$("end").value.trim()) { e.preventDefault(); return focusEnd(); }
       // Backspace in an empty ending goes back to the stem
-      if (id === "end" && !S.answered && (e.key === "Backspace" || e.keyCode === 8) && !el.value) { e.preventDefault(); return focusStem(); }
+      if (id === "end" && !PER_VERB && !S.answered && (e.key === "Backspace" || e.keyCode === 8) && !el.value) { e.preventDefault(); return focusStem(); }
       if (e.key === "Enter") { e.preventDefault(); check(false); }
     });
   });
@@ -473,16 +484,16 @@
     [...$("seg-sort").children].forEach((b) => b.setAttribute("aria-pressed", b.dataset.s === db.sort));
 
     const rows = VERBS.map((v) => {
-      const rs = [0, 1, 2, 3, 4, 5].map((p) => db.f[`${v.inf}.${p}`]);
+      const rs = PER_VERB ? [db.f[v.inf]] : [0, 1, 2, 3, 4, 5].map((p) => db.f[`${v.inf}.${p}`]);
       const sa = rs.reduce((x, r) => x + (r ? r.a : 0), 0), sw = rs.reduce((x, r) => x + (r ? r.w : 0), 0);
       const score = rs.reduce((x, r) => x + (r ? r.s : 0), 0);
       return { v, rs, sa, sw, score };
     });
     if (db.sort === "hard") rows.sort((x, y) => y.score - x.score || (y.sa ? y.sw / y.sa : 0) - (x.sa ? x.sw / x.sa : 0) || x.v.inf.localeCompare(y.v.inf));
     $("sgrid").innerHTML =
-      `<div class="srow hdr"><span>verbo</span>${PSHORT.map((p, i) => `<span class="hc"${!db.vos && i === 4 ? ' style="opacity:.4"' : ""}>${p}</span>`).join("")}<span class="pc">err.</span></div>` +
+      `<div class="srow hdr"><span>verbo</span>${(PER_VERB ? [""] : PSHORT).map((p, i) => `<span class="hc"${!db.vos && i === 4 ? ' style="opacity:.4"' : ""}>${p}</span>`).join("")}<span class="pc">err.</span></div>` +
       rows.map(({ v, rs, sa, sw }) => `<button class="srow" data-v="${v.inf}"><span class="nm">${v.inf}</span>${rs.map((r, p) =>
-        `<span class="cell ${level(r)}" title="${PERSONS[p]}: ${r ? `${r.a} resp., ${r.w} err.` : "sin practicar"}"></span>`).join("")}<span class="pc">${sa ? Math.round((sw / sa) * 100) + "%" : "—"}</span></button>`).join("");
+        `<span class="cell ${level(r)}" title="${PER_VERB ? "" : PERSONS[p] + ": "}${r ? `${r.a} resp., ${r.w} err.` : "sin practicar"}"></span>`).join("")}<span class="pc">${sa ? Math.round((sw / sa) * 100) + "%" : "—"}</span></button>`).join("");
   }
   $("seg-sort").addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; db.sort = b.dataset.s; save(); renderStats(); });
   $("sgrid").addEventListener("click", (e) => { const r = e.target.closest(".srow[data-v]"); if (!r) return; show("train"); startSession("verb", r.dataset.v); });
@@ -496,5 +507,12 @@
     renderStats(); renderModes();
   });
 
+  if (PER_VERB) {
+    document.body.classList.add("per-verb");
+    $("seg-order").closest(".setrow").hidden = true;
+    $("sgrid").closest(".panel").querySelector("h3").firstChild.textContent = "Verbos ";
+    $("t-hard").nextElementSibling.textContent = "verbos difíciles";
+    $("bar").parentNode.title = $("pcount").title = "Verbos dominados";
+  }
   startSession(db.mode === "hard" && hardKeys().length ? "hard" : "all");
 })();

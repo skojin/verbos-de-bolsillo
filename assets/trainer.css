@@ -118,6 +118,9 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--blue); outl
 .pron[hidden] { display: none !important; }
 #stem { padding-left: 10px; padding-right: 2px; background: var(--blue-soft); color: var(--blue); width: 3.2em; border-right: 1px dashed var(--blue); text-align: right; }
 #stem:placeholder-shown { text-align: center; }
+.per-verb #stem { display: none; }
+.per-verb .field input#end { padding-left: 12px; }
+.per-verb .srow { grid-template-columns: minmax(0, 1fr) 26px 42px; }
 #end { flex: 1; padding-left: 4px; padding-right: 12px; }
 .measure { position: absolute; top: 0; left: 0; visibility: hidden; white-space: pre; font: 400 23px var(--f-body); }
 .hint { font-size: 13px; color: var(--muted); margin-top: -4px; }

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f3f6fb" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1322" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Futuro">
+<style>:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }</style>
+<title>Futuro · Verbos de bolsillo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="../assets/trainer.css">
+</head>
+<body>
+<script>
+window.TRAINER = {
+  key: "futuro",
+  brand: "futuro",
+  stemExample: "tendr",
+  accents: ["á", "é"],
+  // the stem is the whole point: one card per verb, the person is picked at random
+  perVerb: true,
+  endings: ["é", "ás", "á", "emos", "éis", "án"],
+  groupOrder: ["P", "D", "O", "R"],
+  groups: {
+    P: { name: "Pierden la -e-", desc: "querer → querr-, saber → sabr-, poder → podr-." },
+    D: { name: "-e- · -i- → -d-", desc: "poner → pondr-, salir → saldr-; también los compuestos: mantener, convenir." },
+    O: { name: "Otros", desc: "decir → dir-, hacer → har-, satisfacer → satisfar-." },
+    R: { name: "Regulares", desc: "El infinitivo entero + terminación: seré, iré, conduciré." },
+  },
+  // [infinitive, ru, en, group, stem]
+  verbs: [
+    ["caber", "помещаться", "to fit", "P", "cabr"],
+    ["componer", "составлять", "to compose", "D", "compondr"],
+    ["conducir", "водить", "to drive", "R", "conducir"],
+    ["conocer", "знать, быть знакомым", "to know, to be familiar with", "R", "conocer"],
+    ["contener", "содержать", "to contain", "D", "contendr"],
+    ["convenir", "подходить, договариваться", "to suit, to agree", "D", "convendr"],
+    ["dar", "давать", "to give", "R", "dar"],
+    ["decir", "говорить", "to say", "O", "dir"],
+    ["deshacer", "отменять, развязывать", "to undo", "O", "deshar"],
+    ["detener", "останавливать", "to stop", "D", "detendr"],
+    ["estar", "быть, находиться", "to be (state, place)", "R", "estar"],
+    ["haber", "иметь (вспом.)", "to have (aux.)", "P", "habr"],
+    ["hacer", "делать", "to do, to make", "O", "har"],
+    ["ir", "идти", "to go", "R", "ir"],
+    ["mantener", "поддерживать", "to maintain", "D", "mantendr"],
+    ["obtener", "получать", "to obtain", "D", "obtendr"],
+    ["oír", "слышать", "to hear", "R", "oir"],
+    ["pedir", "просить", "to ask for", "R", "pedir"],
+    ["poder", "мочь", "can, to be able to", "P", "podr"],
+    ["poner", "класть", "to put", "D", "pondr"],
+    ["proponer", "предлагать", "to propose", "D", "propondr"],
+    ["querer", "хотеть", "to want", "P", "querr"],
+    ["rehacer", "переделывать", "to redo", "O", "rehar"],
+    ["saber", "знать", "to know", "P", "sabr"],
+    ["salir", "выходить", "to go out", "D", "saldr"],
+    ["satisfacer", "удовлетворять", "to satisfy", "O", "satisfar"],
+    ["ser", "быть", "to be", "R", "ser"],
+    ["suponer", "предполагать", "to suppose", "D", "supondr"],
+    ["tener", "иметь", "to have", "D", "tendr"],
+    ["traer", "приносить", "to bring", "R", "traer"],
+    ["valer", "стоить", "to be worth", "D", "valdr"],
+    ["venir", "приходить", "to come", "D", "vendr"],
+    ["ver", "видеть", "to see", "R", "ver"],
+  ],
+};
+</script>
+<script src="../assets/trainer.js"></script>
+</body>
+</html>
