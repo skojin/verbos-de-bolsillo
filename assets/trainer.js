@@ -260,7 +260,7 @@
   }
 
   function renderGtag() {
-    const g = $("gtag"), on = db.hint !== false;
+    const g = $("gtag"), on = db.hint === true;
     g.classList.toggle("off", !on);
     g.textContent = on ? GROUPS[parseKey(S.cur).v.g].name : "?";
     g.setAttribute("aria-label", on ? "Ocultar pista" : "Mostrar pista");
@@ -410,7 +410,7 @@
   const toggleMean = () => { if (!S.cur || !GLOSS.length) return; db.meaning = db.meaning === false; save(); renderMean(); };
   tap($("verb"), toggleMean);
   tap($("mean"), toggleMean);
-  tap($("gtag"), () => { if (!S.cur) return; db.hint = db.hint === false; save(); renderGtag(); });
+  tap($("gtag"), () => { if (!S.cur) return; db.hint = db.hint !== true; save(); renderGtag(); });
   $("stem").addEventListener("input", () => {
     const st = $("stem");
     // Android keyboards don't report space in keydown, so catch it here
