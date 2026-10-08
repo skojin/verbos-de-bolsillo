@@ -20,6 +20,8 @@
   // order of persons inside a verb, and which persons share a stem (persons with the same slot number)
   const ORDER = T.personOrder || [0, 1, 2, 3, 4, 5];
   const SLOT = T.stemSlots || [0, 0, 0, 0, 0, 0];
+  // endFirst: the stem is optional, every form starts in the ending field
+  const STEM_FIRST = !T.endFirst;
   const PERSONS = ["yo", "tú", "él · ella · usted", "nosotros", "vosotros", "ellos · ustedes"];
   const PSHORT = ["yo", "tú", "él", "nos", "vos", "ell"];
   const HARD = 0.3;
@@ -244,7 +246,7 @@
     updateGo();
     $("hint").hidden = !!db.stemUsed;
     renderProgress();
-    if (slotChanged && !$("stem").value && S.mode !== "hard") focusStem(); else focusEnd();
+    if (STEM_FIRST && slotChanged && !$("stem").value && S.mode !== "hard") focusStem(); else focusEnd();
   }
 
   function renderGtag() {
