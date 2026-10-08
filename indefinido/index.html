@@ -439,14 +439,6 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--blue); outl
 
   // ---------- storage ----------
   const LS = "vdb.indefinido.v1";
-  // TODO: drop this migration once old /preterito/ visitors have moved over
-  try {
-    const old = localStorage.getItem("vdb.preterito.v1");
-    if (old !== null) {
-      if (localStorage.getItem(LS) === null) localStorage.setItem(LS, old);
-      localStorage.removeItem("vdb.preterito.v1");
-    }
-  } catch (e) {}
   let db;
   try { db = JSON.parse(localStorage.getItem(LS) || "null"); } catch (e) { db = null; }
   db = Object.assign({ f: {}, sel: null, vos: true, order: "verb", sort: "hard", days: {} }, db || {});
