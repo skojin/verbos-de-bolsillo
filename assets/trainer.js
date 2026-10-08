@@ -233,7 +233,11 @@
     // stems live only while the same verb continues, one per stem slot; a new verb starts empty
     if (!prev || prev.v !== v) S.stems = {};
     const slotChanged = !prev || prev.v !== v || SLOT[prev.p] !== SLOT[p];
-    if (slotChanged) $("stem").value = S.stems[SLOT[p]] || "";
+    if (slotChanged) {
+      // stemCarry: a slot without its own stem yet starts from the previous slot's stem
+      const carried = T.stemCarry && prev && prev.v === v ? S.stems[SLOT[prev.p]] : "";
+      $("stem").value = S.stems[SLOT[p]] ?? carried ?? "";
+    }
     $("end").value = "";
     sizeStem();
     $("go").textContent = "Comprobar";
