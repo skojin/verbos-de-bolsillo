@@ -540,7 +540,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--blue); outl
     $("go").textContent = "Comprobar";
     $("hint").hidden = !!db.stemUsed;
     renderProgress();
-    if (prevVerb !== v.inf) focusStem(); else focusEnd();
+    if (prevVerb !== v.inf && S.mode !== "hard") focusStem(); else focusEnd();
   }
 
   function renderGtag() {
