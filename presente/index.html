@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f3f6fb" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1322" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Presente">
+<style>:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }</style>
+<title>Presente · Verbos de bolsillo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="../assets/trainer.css">
+</head>
+<body>
+<script>
+window.TRAINER = {
+  key: "presente",
+  brand: "presente",
+  stemExample: "quier",
+  accents: ["á", "é", "í", "ñ"],
+  suffix: { 3: "mos" },
+  // nosotros and vosotros keep the infinitive stem (pensamos), the rest change it (pienso)
+  personOrder: [0, 1, 2, 5, 3, 4],
+  stemSlots: [0, 0, 0, 1, 1, 0],
+  groupOrder: ["E", "O", "I", "Y", "G", "U", "S"],
+  groups: {
+    E: { name: "e → ie", desc: "Cambia la raíz salvo en nosotros y vosotros: pienso, quieren." },
+    O: { name: "o → ue", desc: "Igual con o: duermo, puedes; y jugar: juega." },
+    I: { name: "e → i", desc: "pido, sigues, se ríe." },
+    Y: { name: "yo irregular", desc: "Solo cambia yo: hago, conozco, quepo, sé." },
+    G: { name: "yo -go + cambio", desc: "yo en -go y cambio en la raíz: digo, dices; tengo, tienes." },
+    U: { name: "i → y", desc: "y antes de la terminación: construyo, destruyen." },
+    S: { name: "Formas propias", desc: "soy, estoy, voy, he." },
+  },
+  // [infinitive, ru, en, group, forms in source order: yo:nosotros:tú:vosotros:él:ellos]
+  verbs: [
+    ["acostarse", "ложиться спать", "to go to bed", "O", "me acuesto:nos acostamos:te acuestas:os acostáis:se acuesta:se acuestan"],
+    ["almorzar", "обедать", "to have lunch", "O", "almuerzo:almorzamos:almuerzas:almorzáis:almuerza:almuerzan"],
+    ["caber", "помещаться", "to fit", "Y", "quepo:cabemos:cabes:cabéis:cabe:caben"],
+    ["caer", "падать", "to fall", "Y", "caigo:caemos:caes:caéis:cae:caen"],
+    ["cerrar", "закрывать", "to close", "E", "cierro:cerramos:cierras:cerráis:cierra:cierran"],
+    ["coger", "брать, хватать", "to take, to catch", "Y", "cojo:cogemos:coges:cogéis:coge:cogen"],
+    ["conocer", "знать (быть знакомым)", "to know (be familiar with)", "Y", "conozco:conocemos:conoces:conocéis:conoce:conocen"],
+    ["conducir", "водить", "to drive", "Y", "conduzco:conducimos:conduces:conducís:conduce:conducen"],
+    ["construir", "строить", "to build", "U", "construyo:construimos:construyes:construís:construye:construyen"],
+    ["contar", "считать, рассказывать", "to count, to tell", "O", "cuento:contamos:cuentas:contáis:cuenta:cuentan"],
+    ["corregir", "исправлять", "to correct", "I", "corrijo:corregimos:corriges:corregís:corrige:corrigen"],
+    ["dar", "давать", "to give", "Y", "doy:damos:das:dais:da:dan"],
+    ["decir", "говорить", "to say", "G", "digo:decimos:dices:decís:dice:dicen"],
+    ["despedirse", "прощаться", "to say goodbye", "I", "me despido:nos despedimos:te despides:os despedís:se despide:se despiden"],
+    ["destruir", "разрушать", "to destroy", "U", "destruyo:destruimos:destruyes:destruís:destruye:destruyen"],
+    ["divertirse", "веселиться", "to have fun", "E", "me divierto:nos divertimos:te diviertes:os divertís:se divierte:se divierten"],
+    ["dormir", "спать", "to sleep", "O", "duermo:dormimos:duermes:dormís:duerme:duermen"],
+    ["empezar", "начинать", "to start", "E", "empiezo:empezamos:empiezas:empezáis:empieza:empiezan"],
+    ["encontrar", "находить", "to find", "O", "encuentro:encontramos:encuentras:encontráis:encuentra:encuentran"],
+    ["entender", "понимать", "to understand", "E", "entiendo:entendemos:entiendes:entendéis:entiende:entienden"],
+    ["estar", "быть, находиться", "to be (state, place)", "S", "estoy:estamos:estás:estáis:está:están"],
+    ["haber", "иметь (вспом.)", "to have (aux.)", "S", "he:hemos:has:habéis:ha:han"],
+    ["hacer", "делать", "to do, to make", "Y", "hago:hacemos:haces:hacéis:hace:hacen"],
+    ["ir", "идти", "to go", "S", "voy:vamos:vas:vais:va:van"],
+    ["jugar", "играть", "to play", "O", "juego:jugamos:juegas:jugáis:juega:juegan"],
+    ["mentir", "лгать", "to lie", "E", "miento:mentimos:mientes:mentís:miente:mienten"],
+    ["morir", "умирать", "to die", "O", "muero:morimos:mueres:morís:muere:mueren"],
+    ["oír", "слышать", "to hear", "G", "oigo:oímos:oyes:oís:oye:oyen"],
+    ["oler", "пахнуть, нюхать", "to smell", "O", "huelo:olemos:hueles:oléis:huele:huelen"],
+    ["pedir", "просить", "to ask for", "I", "pido:pedimos:pides:pedís:pide:piden"],
+    ["pensar", "думать", "to think", "E", "pienso:pensamos:piensas:pensáis:piensa:piensan"],
+    ["perder", "терять", "to lose", "E", "pierdo:perdemos:pierdes:perdéis:pierde:pierden"],
+    ["poder", "мочь", "to be able to", "O", "puedo:podemos:puedes:podéis:puede:pueden"],
+    ["poner", "класть", "to put", "Y", "pongo:ponemos:pones:ponéis:pone:ponen"],
+    ["preferir", "предпочитать", "to prefer", "E", "prefiero:preferimos:prefieres:preferís:prefiere:prefieren"],
+    ["producir", "производить", "to produce", "Y", "produzco:producimos:produces:producís:produce:producen"],
+    ["querer", "хотеть", "to want", "E", "quiero:queremos:quieres:queréis:quiere:quieren"],
+    ["recordar", "помнить", "to remember", "O", "recuerdo:recordamos:recuerdas:recordáis:recuerda:recuerdan"],
+    ["reírse", "смеяться", "to laugh", "I", "me río:nos reímos:te ríes:os reís:se ríe:se ríen"],
+    ["repetir", "повторять", "to repeat", "I", "repito:repetimos:repites:repetís:repite:repiten"],
+    ["saber", "знать", "to know", "Y", "sé:sabemos:sabes:sabéis:sabe:saben"],
+    ["salir", "выходить", "to go out", "Y", "salgo:salimos:sales:salís:sale:salen"],
+    ["seguir", "следовать, продолжать", "to follow, to keep on", "I", "sigo:seguimos:sigues:seguís:sigue:siguen"],
+    ["sentarse", "садиться", "to sit down", "E", "me siento:nos sentamos:te sientas:os sentáis:se sienta:se sientan"],
+    ["sentir", "чувствовать", "to feel", "E", "siento:sentimos:sientes:sentís:siente:sienten"],
+    ["ser", "быть", "to be", "S", "soy:somos:eres:sois:es:son"],
+    ["servir", "служить, подавать", "to serve", "I", "sirvo:servimos:sirves:servís:sirve:sirven"],
+    ["soñar", "мечтать, видеть сны", "to dream", "O", "sueño:soñamos:sueñas:soñáis:sueña:sueñan"],
+    ["tener", "иметь", "to have", "G", "tengo:tenemos:tienes:tenéis:tiene:tienen"],
+    ["traducir", "переводить", "to translate", "Y", "traduzco:traducimos:traduces:traducís:traduce:traducen"],
+    ["traer", "приносить", "to bring", "Y", "traigo:traemos:traes:traéis:trae:traen"],
+    ["valer", "стоить", "to be worth, to cost", "Y", "valgo:valemos:vales:valéis:vale:valen"],
+    ["venir", "приходить", "to come", "G", "vengo:venimos:vienes:venís:viene:vienen"],
+    ["ver", "видеть", "to see", "Y", "veo:vemos:ves:veis:ve:ven"],
+    ["vestirse", "одеваться", "to get dressed", "I", "me visto:nos vestimos:te vistes:os vestís:se viste:se visten"],
+    ["volver", "возвращаться", "to return", "O", "vuelvo:volvemos:vuelves:volvéis:vuelve:vuelven"],
+  ],
+};
+</script>
+<script src="../assets/trainer.js"></script>
+</body>
+</html>
