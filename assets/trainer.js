@@ -16,8 +16,9 @@
   const GORDER = T.groupOrder;
   // accent keys: only the accented letters that occur in this tense's answers
   const ACC = T.accents;
-  // ending shortcuts for persons whose ending is the same for every verb in the tense
-  const SUFFIX = T.suffix || {};
+  // ending shortcuts for persons whose ending is the same for every verb in the tense;
+  // a plain string shows the same button for every person
+  const SUFFIX = typeof T.suffix === "string" ? [0, 1, 2, 3, 4, 5].map(() => T.suffix) : T.suffix || {};
   // order of persons inside a verb, and which persons share a stem (persons with the same slot number)
   const ORDER = T.personOrder || [0, 1, 2, 3, 4, 5];
   const SLOT = T.stemSlots || [0, 0, 0, 0, 0, 0];
