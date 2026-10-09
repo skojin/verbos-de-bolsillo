@@ -373,7 +373,9 @@
 
   $("keys").innerHTML = ACC.map((c) => `<button class="key" type="button" aria-label="insertar ${c}">${c}</button>`).join("")
     + `<button class="key suf" id="suf" type="button" hidden></button>`;
-  [...$("keys").children].forEach((b, i) => tap(b, () => insert(ACC[i] ?? b.textContent, b)));
+  ACC.forEach((c, i) => tap($("keys").children[i], () => insert(c, $("keys").children[i])));
+  // the ending button finishes the word, so it checks right away
+  tap($("suf"), () => { if (S.answered) return; lastField = $("end"); insert($("suf").textContent, $("suf")); check(false); });
   function updateGo() { $("go").classList.toggle("idle", !S.answered && !$("end").value.trim()); }
 
   function insert(ch, btn) {
