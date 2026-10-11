@@ -68,7 +68,8 @@ body.on-train #v-train, #train-col { flex: 1; display: flex; flex-direction: col
 .tabs { display: flex; flex: 1; gap: 4px; background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 3px; }
 .tabs button { flex: 1; border: 0; background: transparent; color: var(--muted); font: 700 14px var(--f-body); padding: 7px 6px; border-radius: 999px; cursor: pointer; }
 .tabs button[aria-selected="true"] { background: var(--ink); color: var(--card); }
-@media (max-width: 430px) { .brand .bt { display: none; } }
+/* phones: no room beside the tabs, so the tense name gets its own line */
+@media (max-width: 430px) { .top { flex-wrap: wrap; gap: 6px 12px; } .brand { flex-basis: 100%; } body.on-train .brand { order: 1; } }
 
 button { font-family: var(--f-body); }
 button:focus-visible, input:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
@@ -97,11 +98,13 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--blue); outl
   box-shadow: 0 1px 0 var(--line), 0 10px 30px -18px rgba(24, 33, 61, .35);
 }
 .card::before { content: ""; position: absolute; left: 16px; top: 0; bottom: 0; width: 2px; background: var(--margin); }
-.head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+/* a long translation wraps under the verb instead of pushing the hint to its own line */
+.head > div { min-width: 0; }
 .verb { font-family: var(--f-display); font-size: 34px; line-height: 1.05; letter-spacing: -0.01em; }
 .mean { color: var(--muted); font-size: 15px; }
 .verb.tg, .mean { cursor: pointer; user-select: none; }
-.gtag { font: 400 11.5px var(--f-body); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); background: transparent; border: 0; padding: 4px 0; cursor: pointer; touch-action: manipulation; }
+.gtag { font: 400 11.5px var(--f-body); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); background: transparent; border: 0; padding: 4px 0; cursor: pointer; touch-action: manipulation; flex-shrink: 0; max-width: 45%; text-align: right; }
 .gtag.off { width: 26px; height: 26px; padding: 0; border: 1px dashed var(--line); border-radius: 50%; font: 700 14px var(--f-body); letter-spacing: 0; display: inline-grid; place-items: center; }
 .person { align-self: flex-start; font-weight: 700; font-size: 17px; color: var(--blue); background: var(--blue-soft); padding: 3px 10px; border-radius: 8px; }
 
