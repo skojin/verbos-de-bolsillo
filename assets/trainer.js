@@ -187,7 +187,7 @@
   }
 
   // ---------- session ----------
-  const S = { mode: "all", only: null, queue: [], cur: null, answered: false, okFirst: 0, bad: 0, done: 0, total: 0, missed: new Set(), seenWrong: new Set(), timer: null, stems: {} };
+  const S = { mode: "all", only: null, queue: [], cur: null, answered: false, fixing: false, okFirst: 0, bad: 0, done: 0, total: 0, missed: new Set(), seenWrong: new Set(), timer: null, stems: {} };
   let lastField = null;
 
   function buildDeck() {
@@ -229,7 +229,8 @@
 
   function next() {
     clearTimeout(S.timer);
-    S.answered = false;
+    S.answered = false; S.fixing = false;
+    $("skip").textContent = "No lo sé";
     const f = $("field"); f.classList.remove("ok", "bad");
     $("fb").innerHTML = "";
     if (!S.queue.length) return finish();
@@ -286,7 +287,8 @@
 
     const accepted = [form.word, ...(ALT[S.cur] || [])].map(norm);
     const ok = !giveUp && accepted.includes(typed);
-    S.answered = true;
+    // after a miss the form stays open for a fix; the fix itself is not scored
+    if (S.fixing) return ok ? pass(form) : showMiss(form, typed);
 
     const firstTry = !S.seenWrong.has(rec(S.cur));
     const r = db.f[rec(S.cur)] || (db.f[rec(S.cur)] = { a: 0, w: 0, s: 0 });
@@ -296,27 +298,38 @@
     if (ok) {
       r.s = r.s * 0.5; if (r.s < 0.02) r.s = 0;
       S.done++; if (firstTry) S.okFirst++;
-      $("field").classList.add("ok");
-      $("fb").innerHTML = `<span class="good">✓ ${esc((form.pron ? form.pron + " " : "") + form.word)}</span>`;
-      $("go").textContent = "Siguiente"; updateGo();
-      S.timer = setTimeout(next, 750);
+      pass(form);
     } else {
       r.w++; r.s = Math.min(r.s + 1, 5); d.w++;
       S.bad++; S.seenWrong.add(rec(S.cur)); S.missed.add(S.cur);
       // perVerb: the verb comes back in another random person
       S.queue.splice(requeueAt(v.inf), 0, PER_VERB ? randomCard(v.inf) : S.cur);
-      $("field").classList.add("bad");
-      const pr = form.pron ? esc(form.pron) + " " : "";
-      if (typed) {
-        const dd = diff(typed, form.word);
-        $("fb").innerHTML = `<div><span class="lbl">tú</span><span class="w">${pr}${dd.a}</span></div><div><span class="lbl">correcto</span><span class="w">${pr}${dd.b}</span></div>`;
-      } else {
-        $("fb").innerHTML = `<div><span class="lbl">correcto</span><span class="w"><span class="d-miss">${pr}${esc(form.word)}</span></span></div>`;
-      }
-      $("go").textContent = "Siguiente"; updateGo();
+      S.fixing = true;
+      $("skip").textContent = "Siguiente";
+      showMiss(form, typed);
     }
     save();
     renderProgress(); renderModes();
+  }
+
+  function pass(form) {
+    S.answered = true; S.fixing = false;
+    $("field").classList.remove("bad"); $("field").classList.add("ok");
+    $("fb").innerHTML = `<span class="good">✓ ${esc((form.pron ? form.pron + " " : "") + form.word)}</span>`;
+    $("go").textContent = "Siguiente"; updateGo();
+    S.timer = setTimeout(next, 750);
+  }
+
+  function showMiss(form, typed) {
+    $("field").classList.add("bad");
+    const pr = form.pron ? esc(form.pron) + " " : "";
+    if (typed) {
+      const dd = diff(typed, form.word);
+      $("fb").innerHTML = `<div><span class="lbl">tú</span><span class="w">${pr}${dd.a}</span></div><div><span class="lbl">correcto</span><span class="w">${pr}${dd.b}</span></div>`;
+    } else {
+      $("fb").innerHTML = `<div><span class="lbl">correcto</span><span class="w"><span class="d-miss">${pr}${esc(form.word)}</span></span></div>`;
+    }
+    focusEnd();
   }
 
   // grouped by verb: a missed form comes back at the end of the verb's block,
@@ -423,7 +436,7 @@
     sizeStem();
   });
   tap($("go"), () => check(false));
-  tap($("skip"), () => { if (!S.answered) check(true); else next(); });
+  tap($("skip"), () => { if (S.answered || S.fixing) next(); else check(true); });
   $("again").addEventListener("click", () => { startSession(S.mode, S.only); });
   $("toHard").addEventListener("click", () => startSession("hard"));
 
