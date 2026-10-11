@@ -126,6 +126,7 @@
           <span><i class="c1"></i>insegura</span>
           <span><i class="c2"></i>fallo</span>
         </div>
+        <input id="ssearch" class="search" type="search" placeholder="Buscar verbo" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-label="Buscar verbo">
         <div class="grid" id="sgrid"></div>
         <p class="gdesc" style="margin:0">Toca un verbo para practicar solo ese. A la derecha, el porcentaje de errores total.</p>
       </div>
@@ -495,7 +496,8 @@
     $("t-hard").textContent = hardKeys().length;
     [...$("seg-sort").children].forEach((b) => b.setAttribute("aria-pressed", b.dataset.s === db.sort));
 
-    const rows = VERBS.map((v) => {
+    const q = fold($("ssearch").value);
+    const rows = VERBS.filter((v) => !q || hit(v, q)).map((v) => {
       const rs = PER_VERB ? [db.f[v.inf]] : [0, 1, 2, 3, 4, 5].map((p) => db.f[`${v.inf}.${p}`]);
       const sa = rs.reduce((x, r) => x + (r ? r.a : 0), 0), sw = rs.reduce((x, r) => x + (r ? r.w : 0), 0);
       const score = rs.reduce((x, r) => x + (r ? r.s : 0), 0);
@@ -505,8 +507,10 @@
     $("sgrid").innerHTML =
       `<div class="srow hdr"><span>verbo</span>${(PER_VERB ? [""] : PSHORT).map((p, i) => `<span class="hc"${!db.vos && i === 4 ? ' style="opacity:.4"' : ""}>${p}</span>`).join("")}<span class="pc">err.</span></div>` +
       rows.map(({ v, rs, sa, sw }) => `<button class="srow" data-v="${v.inf}"><span class="nm">${v.inf}</span>${rs.map((r, p) =>
-        `<span class="cell ${level(r)}" title="${PER_VERB ? "" : PERSONS[p] + ": "}${r ? `${r.a} resp., ${r.w} err.` : "sin practicar"}"></span>`).join("")}<span class="pc">${sa ? Math.round((sw / sa) * 100) + "%" : "—"}</span></button>`).join("");
+        `<span class="cell ${level(r)}" title="${PER_VERB ? "" : PERSONS[p] + ": "}${r ? `${r.a} resp., ${r.w} err.` : "sin practicar"}"></span>`).join("")}<span class="pc">${sa ? Math.round((sw / sa) * 100) + "%" : "—"}</span></button>`).join("")
+      + (rows.length ? "" : `<p class="gdesc" style="margin:8px 0 0;text-align:center">Nada encontrado.</p>`);
   }
+  $("ssearch").addEventListener("input", renderStats);
   $("seg-sort").addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; db.sort = b.dataset.s; save(); renderStats(); });
   $("sgrid").addEventListener("click", (e) => { const r = e.target.closest(".srow[data-v]"); if (!r) return; show("train"); startSession("verb", r.dataset.v); });
   let resetArmed = null;
