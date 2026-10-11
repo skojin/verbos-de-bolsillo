@@ -164,6 +164,9 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--blue); outl
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .chip { border: 1px solid var(--line); background: transparent; color: var(--muted); border-radius: 999px; padding: 5px 11px; font: 400 15px var(--f-body); cursor: pointer; }
 .chip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--card); }
+.chip.hit { outline: 2px solid var(--blue); outline-offset: 2px; }
+.search { width: 100%; border: 1px solid var(--line); border-radius: var(--r); background: var(--card); color: var(--ink); font: 400 16px var(--f-body); padding: 11px 14px; outline: none; }
+.search:focus { border-color: var(--blue); }
 .mini { border: 0; background: transparent; color: var(--blue); font: 700 13px var(--f-body); cursor: pointer; padding: 4px 2px; }
 .setrow { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
 .setrow label { font-size: 15px; }

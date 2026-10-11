@@ -103,6 +103,7 @@
           <span><button class="mini" id="selAll">todos</button> · <button class="mini" id="selNone">ninguno</button></span>
         </div>
       </div>
+      <input id="vsearch" class="search" type="search" placeholder="Buscar verbo" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-label="Buscar verbo">
       <div id="groups" style="display:flex;flex-direction:column;gap:10px"></div>
     </div>
   </section>
@@ -443,16 +444,23 @@
   document.querySelector(".tabs").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) show(b.dataset.v); });
 
   // ---------- verbs view ----------
+  // search ignores case and accents: anywhere in the infinitive (-ducir), from a word start in the translations
+  // (давать must not find подавать); a matching group shows all its verbs
+  const fold = (s) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+  const hit = (v, q) => fold(v.inf).includes(q) || [v.ru, v.en].some((t) => (" " + fold(t).replace(/[^\p{L}]+/gu, " ")).includes(" " + q));
   function renderVerbs() {
     const sel = new Set(selected());
+    const q = fold($("vsearch").value);
     $("selcount").textContent = `${sel.size} de ${VERBS.length} seleccionados`;
-    $("groups").innerHTML = GORDER.map((g) => {
+    const html = GORDER.map((g) => {
       const vs = VERBS.filter((v) => v.g === g);
+      if (q && !vs.some((v) => hit(v, q))) return "";
       const all = vs.every((v) => sel.has(v.inf));
       return `<div class="panel"><h3>${GROUPS[g].name} <button class="mini" data-g="${g}">${all ? "ninguno" : "todos"}</button></h3>
         <p class="gdesc">${GROUPS[g].desc}</p>
-        <div class="chips">${vs.map((v) => `<button class="chip" data-v="${v.inf}" aria-pressed="${sel.has(v.inf)}">${v.inf}</button>`).join("")}</div></div>`;
+        <div class="chips">${vs.map((v) => `<button class="chip${q && hit(v, q) ? " hit" : ""}" data-v="${v.inf}" aria-pressed="${sel.has(v.inf)}">${v.inf}</button>`).join("")}</div></div>`;
     }).join("");
+    $("groups").innerHTML = html || `<p class="gdesc" style="margin:0;text-align:center">Nada encontrado.</p>`;
     [...$("seg-order").children].forEach((b) => b.setAttribute("aria-pressed", b.dataset.o === db.order));
     [...$("seg-vos").children].forEach((b) => b.setAttribute("aria-pressed", (b.dataset.v === "1") === db.vos));
   }
@@ -469,6 +477,7 @@
       setSel(sel);
     }
   });
+  $("vsearch").addEventListener("input", renderVerbs);
   $("selAll").addEventListener("click", () => setSel(new Set(VERBS.map((v) => v.inf))));
   $("selNone").addEventListener("click", () => setSel(new Set()));
   $("seg-order").addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; db.order = b.dataset.o; dirty = true; save(); renderVerbs(); });
