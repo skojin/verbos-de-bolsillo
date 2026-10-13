@@ -338,9 +338,10 @@
   }
 
   // grouped by verb: a missed form comes back at the end of the verb's block,
-  // so the next verb starts only after all its forms are right
+  // so the next verb starts only after all its forms are right;
+  // difíciles holds only a few forms per verb, so there it waits three cards instead of coming straight back
   function requeueAt(inf) {
-    if (PER_VERB || (db.order !== "verb" && S.mode !== "verb")) return Math.min(3, S.queue.length);
+    if (PER_VERB || S.mode === "hard" || (db.order !== "verb" && S.mode !== "verb")) return Math.min(3, S.queue.length);
     let n = 0;
     while (n < S.queue.length && S.queue[n].split(".")[0] === inf) n++;
     return n;
