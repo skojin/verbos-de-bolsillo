@@ -187,7 +187,7 @@
   }
 
   // ---------- session ----------
-  const S = { mode: "all", only: null, queue: [], cur: null, answered: false, fixing: false, stemMissed: false, okFirst: 0, bad: 0, done: 0, total: 0, missed: new Set(), seenWrong: new Set(), timer: null, stems: {} };
+  const S = { mode: "all", only: null, queue: [], cur: null, answered: false, fixing: false, stemMissed: false, stemMiss: new Set(), okFirst: 0, bad: 0, done: 0, total: 0, missed: new Set(), seenWrong: new Set(), timer: null, stems: {} };
   let lastField = null;
 
   function buildDeck() {
@@ -222,7 +222,7 @@
     S.mode = mode; S.only = only || null;
     if (mode !== "verb" && db.mode !== mode) { db.mode = mode; save(); }
     S.queue = buildDeck(); S.total = S.queue.length; S.done = 0; S.okFirst = 0; S.bad = 0;
-    S.missed = new Set(); S.seenWrong = new Set();
+    S.missed = new Set(); S.seenWrong = new Set(); S.stemMiss = new Set();
     renderModes();
     next();
   }
@@ -254,8 +254,8 @@
       const carried = T.stemCarry && prev && prev.v === v ? S.stems[SLOT[prev.p]] : "";
       $("stem").value = S.stems[SLOT[p]] ?? carried ?? "";
     }
-    // the last stem was wrong: start this form with an empty stem, as on a new verb
-    const stemDropped = !slotChanged && S.stems[SLOT[p]] === "" && !!$("stem").value;
+    // the last stem was wrong, or this form comes back after a stem mistake: start with an empty stem
+    const stemDropped = (S.stemMiss.delete(S.cur) || (!slotChanged && S.stems[SLOT[p]] === "")) && !!$("stem").value;
     if (stemDropped) $("stem").value = "";
     $("end").value = "";
     sizeStem();
@@ -289,7 +289,7 @@
 
     const accepted = [form.word, ...(ALT[S.cur] || [])].map(norm);
     // a stem that did not start the right answer is not carried to the next form, even once fixed
-    if (!accepted.some((a) => a.startsWith(norm(stem)))) S.stemMissed = true;
+    if (!accepted.some((a) => a.startsWith(norm(stem)))) { S.stemMissed = true; S.stemMiss.add(S.cur); }
     S.stems[SLOT[p]] = S.stemMissed ? "" : stem;
     const ok = !giveUp && accepted.includes(typed);
     // after a miss the form stays open for a fix; the fix itself is not scored
