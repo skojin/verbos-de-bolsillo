@@ -116,6 +116,11 @@
         <div class="tile"><b id="t-ans">0</b><span>respuestas, <span id="t-today">0</span> hoy</span></div>
         <div class="tile"><b id="t-hard">0</b><span>formas difíciles</span></div>
       </div>
+      <div class="panel" id="pends" hidden>
+        <h3>Terminaciones</h3>
+        <div class="ends" id="ends"></div>
+        <p class="gdesc" style="margin:0">Las terminaciones que fallas salen más a menudo.</p>
+      </div>
       <div class="panel">
         <h3>Verbos por persona
           <span class="seg" id="seg-sort"><button data-s="hard">difíciles</button><button data-s="abc">a–z</button></span>
@@ -145,7 +150,7 @@
   const LS = `vdb.${T.key}.v1`;
   let db;
   try { db = JSON.parse(localStorage.getItem(LS) || "null"); } catch (e) { db = null; }
-  db = Object.assign({ f: {}, sel: null, vos: true, order: "verb", sort: "hard", days: {} }, db || {});
+  db = Object.assign({ f: {}, sel: null, vos: true, order: "verb", sort: "hard", days: {}, pe: {} }, db || {});
   const save = () => { try { localStorage.setItem(LS, JSON.stringify(db)); } catch (e) {} };
   const selected = () => (db.sel ? db.sel.filter((n) => n in VI) : VERBS.map((v) => v.inf));
   const persons = () => ORDER.filter((p) => db.vos || p !== 4);
@@ -158,7 +163,13 @@
   const norm = (s) => s.normalize("NFC").toLowerCase().replace(/\s+/g, " ").trim();
   const shuffle = (a) => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
   const rec = (k) => (PER_VERB ? k.split(".")[0] : k);
-  const randomCard = (inf) => { const ps = persons(); return `${inf}.${ps[Math.floor(Math.random() * ps.length)]}`; };
+  // persons whose shared ending (db.pe) gets missed come up more often: weight 1 + 2 × score
+  const randomCard = (inf) => {
+    const ps = persons(), wt = ps.map((p) => 1 + 2 * ((db.pe[p] && db.pe[p].s) || 0));
+    let x = Math.random() * wt.reduce((a, b) => a + b, 0), i = 0;
+    while (i < ps.length - 1 && (x -= wt[i]) >= 0) i++;
+    return `${inf}.${ps[i]}`;
+  };
   const parseKey = (k) => { const [inf, p] = k.split("."); return { v: VERBS[VI[inf]], p: +p }; };
 
   function diff(a, b) {
@@ -300,6 +311,12 @@
     r.a++; r.t = Date.now();
     const d = db.days[today()] || (db.days[today()] = { a: 0, w: 0 });
     d.a++;
+    if (T.endings && !giveUp) {
+      const e = db.pe[p] || (db.pe[p] = { a: 0, w: 0, s: 0 });
+      e.a++;
+      if (typed.endsWith(norm(T.endings[p]))) { e.s = e.s * 0.5; if (e.s < 0.02) e.s = 0; }
+      else { e.w++; e.s = Math.min(e.s + 1, 5); }
+    }
     if (ok) {
       r.s = r.s * 0.5; if (r.s < 0.02) r.s = 0;
       S.done++; if (firstTry) S.okFirst++;
@@ -513,6 +530,9 @@
     $("t-ans").textContent = a;
     $("t-today").textContent = (db.days[today()] || { a: 0 }).a;
     $("t-hard").textContent = hardKeys().length;
+    $("pends").hidden = !T.endings;
+    if (T.endings) $("ends").innerHTML = T.endings.map((e, p) => { const r = db.pe[p];
+      return `<div${!db.vos && p === 4 ? ' style="opacity:.4"' : ""}><span class="lbl">-${esc(e)}</span><span class="cell ${level(r)}" title="${PERSONS[p]}: ${r ? `${r.a} resp., ${r.w} err.` : "sin practicar"}"></span></div>`; }).join("");
     [...$("seg-sort").children].forEach((b) => b.setAttribute("aria-pressed", b.dataset.s === db.sort));
 
     const q = fold($("ssearch").value);
@@ -537,7 +557,7 @@
     const b = $("reset");
     if (!resetArmed) { b.textContent = "¿Seguro? Toca otra vez"; resetArmed = setTimeout(() => { resetArmed = null; b.textContent = "Borrar progreso"; }, 3500); return; }
     clearTimeout(resetArmed); resetArmed = null;
-    db.f = {}; db.days = {}; save(); b.textContent = "Progreso borrado";
+    db.f = {}; db.days = {}; db.pe = {}; save(); b.textContent = "Progreso borrado";
     setTimeout(() => (b.textContent = "Borrar progreso"), 2000);
     renderStats(); renderModes();
   });
