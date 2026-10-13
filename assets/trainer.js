@@ -187,7 +187,7 @@
   }
 
   // ---------- session ----------
-  const S = { mode: "all", only: null, queue: [], cur: null, answered: false, fixing: false, okFirst: 0, bad: 0, done: 0, total: 0, missed: new Set(), seenWrong: new Set(), timer: null, stems: {} };
+  const S = { mode: "all", only: null, queue: [], cur: null, answered: false, fixing: false, stemMissed: false, okFirst: 0, bad: 0, done: 0, total: 0, missed: new Set(), seenWrong: new Set(), timer: null, stems: {} };
   let lastField = null;
 
   function buildDeck() {
@@ -229,7 +229,7 @@
 
   function next() {
     clearTimeout(S.timer);
-    S.answered = false; S.fixing = false;
+    S.answered = false; S.fixing = false; S.stemMissed = false;
     $("skip").textContent = "No lo sé";
     const f = $("field"); f.classList.remove("ok", "bad");
     $("fb").innerHTML = "";
@@ -254,13 +254,16 @@
       const carried = T.stemCarry && prev && prev.v === v ? S.stems[SLOT[prev.p]] : "";
       $("stem").value = S.stems[SLOT[p]] ?? carried ?? "";
     }
+    // the last stem was wrong: start this form with an empty stem, as on a new verb
+    const stemDropped = !slotChanged && S.stems[SLOT[p]] === "" && !!$("stem").value;
+    if (stemDropped) $("stem").value = "";
     $("end").value = "";
     sizeStem();
     $("go").textContent = "Comprobar";
     updateGo();
     $("hint").hidden = PER_VERB || !!db.stemUsed;
     renderProgress();
-    if (STEM_FIRST && slotChanged && !$("stem").value && S.mode !== "hard") focusStem(); else focusEnd();
+    if (STEM_FIRST && (slotChanged || stemDropped) && !$("stem").value && S.mode !== "hard") focusStem(); else focusEnd();
   }
 
   function renderGtag() {
@@ -283,9 +286,11 @@
     // an empty ending is an accidental tap, even with a stem filled in
     if (!giveUp && !$("end").value.trim()) { focusEnd(); return; }
     if (stem) db.stemUsed = true;
-    S.stems[SLOT[p]] = stem;
 
     const accepted = [form.word, ...(ALT[S.cur] || [])].map(norm);
+    // a stem that did not start the right answer is not carried to the next form, even once fixed
+    if (!accepted.some((a) => a.startsWith(norm(stem)))) S.stemMissed = true;
+    S.stems[SLOT[p]] = S.stemMissed ? "" : stem;
     const ok = !giveUp && accepted.includes(typed);
     // after a miss the form stays open for a fix; the fix itself is not scored
     if (S.fixing) return ok ? pass(form) : showMiss(form, typed);
