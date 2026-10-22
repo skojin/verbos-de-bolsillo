@@ -23,6 +23,10 @@ window.TRAINER = {
   accents: ["é", "í", "ó"],
   suffix: { 1: "ste", 3: "mos", 4: "steis", 5: "ron" },
   alt: { "reírse.2": ["rio"] }, // RAE 2010 spelling
+  // él and ellos may change the stem (pidió, durmieron) while the rest keep it (pedimos)
+  stemSlots: [0, 0, 1, 0, 0, 1],
+  // most verbs keep one stem in all six forms (dije, dijo), so él starts from it
+  stemCarry: true,
   groupOrder: ["F", "S", "Z", "V", "Y"],
   groups: {
     F: { name: "Raíz irregular", desc: "Raíz propia y terminaciones sin tilde: anduve, dije, hizo." },

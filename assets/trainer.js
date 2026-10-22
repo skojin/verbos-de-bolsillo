@@ -198,7 +198,7 @@
   }
 
   // ---------- session ----------
-  const S = { mode: "all", only: null, queue: [], cur: null, answered: false, fixing: false, stemMissed: false, stemMiss: new Set(), okFirst: 0, bad: 0, done: 0, total: 0, missed: new Set(), seenWrong: new Set(), timer: null, stems: {} };
+  const S = { mode: "all", only: null, queue: [], cur: null, answered: false, fixing: false, stemMissed: false, stemMiss: new Set(), stemIn: "", stemOwn: false, okFirst: 0, bad: 0, done: 0, total: 0, missed: new Set(), seenWrong: new Set(), timer: null, stems: {} };
   let lastField = null;
 
   function buildDeck() {
@@ -260,14 +260,17 @@
     // stems live only while the same verb continues, one per stem slot; a new verb starts empty
     if (!prev || prev.v !== v) S.stems = {};
     const slotChanged = !prev || prev.v !== v || SLOT[prev.p] !== SLOT[p];
+    const shown = $("stem").value;
+    S.stemOwn = SLOT[p] in S.stems;
     if (slotChanged) {
       // stemCarry: a slot without its own stem yet starts from the previous slot's stem
       const carried = T.stemCarry && prev && prev.v === v ? S.stems[SLOT[prev.p]] : "";
       $("stem").value = S.stems[SLOT[p]] ?? carried ?? "";
-    }
-    // the last stem was wrong, or this form comes back after a stem mistake: start with an empty stem
-    const stemDropped = (S.stemMiss.delete(S.cur) || (!slotChanged && S.stems[SLOT[p]] === "")) && !!$("stem").value;
-    if (stemDropped) $("stem").value = "";
+    } else if (SLOT[p] in S.stems) $("stem").value = S.stems[SLOT[p]];
+    // a form that comes back after a stem mistake starts with an empty stem
+    if (S.stemMiss.delete(S.cur)) $("stem").value = "";
+    const stemDropped = !slotChanged && !!shown && !$("stem").value;
+    S.stemIn = $("stem").value;
     $("end").value = "";
     sizeStem();
     $("go").textContent = "Comprobar";
@@ -299,9 +302,10 @@
     if (stem) db.stemUsed = true;
 
     const accepted = [form.word, ...(ALT[S.cur] || [])].map(norm);
-    // a stem that did not start the right answer is not carried to the next form, even once fixed
     if (!accepted.some((a) => a.startsWith(norm(stem)))) { S.stemMissed = true; S.stemMiss.add(S.cur); }
-    S.stems[SLOT[p]] = S.stemMissed ? "" : stem;
+    // after a stem mistake the next form gets the stem this form started with, not the fix (yo started
+    // empty, so tú starts empty); a stem carried over from another slot is not kept, the slot starts empty
+    S.stems[SLOT[p]] = S.stemMissed ? (S.stemOwn ? S.stemIn : "") : stem;
     const ok = !giveUp && accepted.includes(typed);
     // after a miss the form stays open for a fix; the fix itself is not scored
     if (S.fixing) return ok ? pass(form) : showMiss(form, typed);
