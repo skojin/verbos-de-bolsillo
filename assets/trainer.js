@@ -3,8 +3,8 @@
   const T = window.TRAINER;
   // forms come in the source order: yo, nosotros, tú, vosotros, él, ellos
   const VERBS = T.verbs.map(([inf, ru, en, g, src]) => {
-    // endings: the verb gives only its stem and every person adds the shared ending
-    const s = T.endings ? [0, 3, 1, 4, 2, 5].map((i) => src + T.endings[i]) : src.split(":");
+    // endings: a verb may give only its stem and every person adds the shared ending
+    const s = T.endings && !src.includes(":") ? [0, 3, 1, 4, 2, 5].map((i) => src + T.endings[i]) : src.split(":");
     const forms = [s[0], s[2], s[4], s[1], s[3], s[5]].map((f) => {
       const sp = f.lastIndexOf(" ");
       return sp > 0 ? { pron: f.slice(0, sp), word: f.slice(sp + 1) } : { pron: "", word: f };
@@ -12,6 +12,8 @@
     return { inf, ru, en, g, forms };
   });
   const ALT = T.alt || {};
+  // altForm: a second accepted spelling made from the answer (pidiera → pidiese)
+  const altOf = (w) => (T.altForm ? [T.altForm(w)] : []);
   const GROUPS = T.groups;
   const GORDER = T.groupOrder;
   // accent keys: only the accented letters that occur in this tense's answers
@@ -301,7 +303,7 @@
     if (!giveUp && !$("end").value.trim()) { focusEnd(); return; }
     if (stem) db.stemUsed = true;
 
-    const accepted = [form.word, ...(ALT[S.cur] || [])].map(norm);
+    const accepted = [form.word, ...altOf(form.word), ...(ALT[S.cur] || [])].map(norm);
     if (!accepted.some((a) => a.startsWith(norm(stem)))) { S.stemMissed = true; S.stemMiss.add(S.cur); }
     // after a stem mistake the next form gets the stem this form started with, not the fix (yo started
     // empty, so tú starts empty); a stem carried over from another slot is not kept, the slot starts empty
@@ -318,7 +320,7 @@
     if (T.endings && !giveUp) {
       const e = db.pe[p] || (db.pe[p] = { a: 0, w: 0, s: 0 });
       e.a++;
-      if (typed.endsWith(norm(T.endings[p]))) { e.s = e.s * 0.5; if (e.s < 0.02) e.s = 0; }
+      if ([T.endings[p], ...altOf(T.endings[p])].some((x) => typed.endsWith(norm(x)))) { e.s = e.s * 0.5; if (e.s < 0.02) e.s = 0; }
       else { e.w++; e.s = Math.min(e.s + 1, 5); }
     }
     if (ok) {

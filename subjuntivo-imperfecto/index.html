@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f3f6fb" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1322" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Subj. imperf.">
+<style>:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }</style>
+<title>Imperfecto de subjuntivo · Verbos de bolsillo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="../assets/trainer.css">
+</head>
+<body>
+<script>
+window.TRAINER = {
+  key: "subjuntivo-imperfecto",
+  brand: "subj. imperfecto",
+  stemExample: "dije",
+  personPrefix: "que ",
+  accents: ["á", "é"],
+  // one stem in all six forms (the ellos of the indefinido without -ron), so one card per verb in a random person
+  perVerb: true,
+  endings: ["ra", "ras", "ra", "ramos", "rais", "ran"],
+  // the -se forms mean the same (pidiese, pidiésemos); asked as -ra, accepted either way
+  altForm: (w) => w.replace(/ra(s|mos|is|n)?$/, "se$1"),
+  suffix: "mos",
+  groupOrder: ["F", "V", "Y", "S", "R"],
+  groups: {
+    F: { name: "Raíz irregular", desc: "La raíz del indefinido: anduvieron → anduviera, dijeron → dijera." },
+    V: { name: "e → i · o → u", desc: "Como ellos del indefinido: pidieron → pidiera, durmieron → durmiera." },
+    Y: { name: "i → y", desc: "leyeron → leyera, oyeron → oyera." },
+    S: { name: "ser · ir · dar · ver", desc: "fueron → fuera (ser e ir), dieron → diera, vieron → viera." },
+    R: { name: "Sin cambio", desc: "Cambian en presente, aquí no: pensara, volviera, jugara." },
+  },
+  // [infinitive, ru, en, group, forms in source order: yo:nosotros:tú:vosotros:él:ellos]
+  verbs: [
+    ["andar", "ходить", "to walk", "F", "anduviera:anduviéramos:anduvieras:anduvierais:anduviera:anduvieran"],
+    ["caber", "помещаться", "to fit", "F", "cupiera:cupiéramos:cupieras:cupierais:cupiera:cupieran"],
+    ["caer", "падать", "to fall", "Y", "cayera:cayéramos:cayeras:cayerais:cayera:cayeran"],
+    ["competir", "соревноваться", "to compete", "V", "compitiera:compitiéramos:compitieras:compitierais:compitiera:compitieran"],
+    ["concluir", "заканчивать", "to conclude", "Y", "concluyera:concluyéramos:concluyeras:concluyerais:concluyera:concluyeran"],
+    ["conducir", "водить", "to drive", "F", "condujera:condujéramos:condujeras:condujerais:condujera:condujeran"],
+    ["creer", "верить, считать", "to believe", "Y", "creyera:creyéramos:creyeras:creyerais:creyera:creyeran"],
+    ["dar", "давать", "to give", "S", "diera:diéramos:dieras:dierais:diera:dieran"],
+    ["decir", "говорить", "to say", "F", "dijera:dijéramos:dijeras:dijerais:dijera:dijeran"],
+    ["despertar", "будить", "to wake (someone) up", "R", "despertara:despertáramos:despertaras:despertarais:despertara:despertaran"],
+    ["destruir", "разрушать", "to destroy", "Y", "destruyera:destruyéramos:destruyeras:destruyerais:destruyera:destruyeran"],
+    ["divertirse", "веселиться", "to have fun", "V", "me divirtiera:nos divirtiéramos:te divirtieras:os divirtierais:se divirtiera:se divirtieran"],
+    ["dormir", "спать", "to sleep", "V", "durmiera:durmiéramos:durmieras:durmierais:durmiera:durmieran"],
+    ["elegir", "выбирать", "to choose", "V", "eligiera:eligiéramos:eligieras:eligierais:eligiera:eligieran"],
+    ["empezar", "начинать", "to start", "R", "empezara:empezáramos:empezaras:empezarais:empezara:empezaran"],
+    ["entender", "понимать", "to understand", "R", "entendiera:entendiéramos:entendieras:entendierais:entendiera:entendieran"],
+    ["estar", "быть, находиться", "to be (state, place)", "F", "estuviera:estuviéramos:estuvieras:estuvierais:estuviera:estuvieran"],
+    ["freír", "жарить", "to fry", "V", "friera:friéramos:frieras:frierais:friera:frieran"],
+    ["haber", "иметь (вспом.)", "to have (aux.)", "F", "hubiera:hubiéramos:hubieras:hubierais:hubiera:hubieran"],
+    ["hacer", "делать", "to do, to make", "F", "hiciera:hiciéramos:hicieras:hicierais:hiciera:hicieran"],
+    ["huir", "убегать", "to flee", "Y", "huyera:huyéramos:huyeras:huyerais:huyera:huyeran"],
+    ["ir", "идти", "to go", "S", "fuera:fuéramos:fueras:fuerais:fuera:fueran"],
+    ["jugar", "играть", "to play", "R", "jugara:jugáramos:jugaras:jugarais:jugara:jugaran"],
+    ["leer", "читать", "to read", "Y", "leyera:leyéramos:leyeras:leyerais:leyera:leyeran"],
+    ["mentir", "лгать", "to lie", "V", "mintiera:mintiéramos:mintieras:mintierais:mintiera:mintieran"],
+    ["morir", "умирать", "to die", "V", "muriera:muriéramos:murieras:murierais:muriera:murieran"],
+    ["oír", "слышать", "to hear", "Y", "oyera:oyéramos:oyeras:oyerais:oyera:oyeran"],
+    ["pedir", "просить", "to ask for", "V", "pidiera:pidiéramos:pidieras:pidierais:pidiera:pidieran"],
+    ["pensar", "думать", "to think", "R", "pensara:pensáramos:pensaras:pensarais:pensara:pensaran"],
+    ["poder", "мочь", "can, to be able to", "F", "pudiera:pudiéramos:pudieras:pudierais:pudiera:pudieran"],
+    ["poner", "класть", "to put", "F", "pusiera:pusiéramos:pusieras:pusierais:pusiera:pusieran"],
+    ["preferir", "предпочитать", "to prefer", "V", "prefiriera:prefiriéramos:prefirieras:prefirierais:prefiriera:prefirieran"],
+    ["producir", "производить", "to produce", "F", "produjera:produjéramos:produjeras:produjerais:produjera:produjeran"],
+    ["querer", "хотеть", "to want", "F", "quisiera:quisiéramos:quisieras:quisierais:quisiera:quisieran"],
+    ["reírse", "смеяться", "to laugh", "V", "me riera:nos riéramos:te rieras:os rierais:se riera:se rieran"],
+    ["repetir", "повторять", "to repeat", "V", "repitiera:repitiéramos:repitieras:repitierais:repitiera:repitieran"],
+    ["saber", "знать", "to know", "F", "supiera:supiéramos:supieras:supierais:supiera:supieran"],
+    ["seguir", "следовать", "to follow", "V", "siguiera:siguiéramos:siguieras:siguierais:siguiera:siguieran"],
+    ["sentarse", "садиться", "to sit down", "R", "me sentara:nos sentáramos:te sentaras:os sentarais:se sentara:se sentaran"],
+    ["sentir", "чувствовать", "to feel", "V", "sintiera:sintiéramos:sintieras:sintierais:sintiera:sintieran"],
+    ["ser", "быть", "to be", "S", "fuera:fuéramos:fueras:fuerais:fuera:fueran"],
+    ["servir", "служить, подавать", "to serve", "V", "sirviera:sirviéramos:sirvieras:sirvierais:sirviera:sirvieran"],
+    ["sugerir", "предлагать", "to suggest", "V", "sugiriera:sugiriéramos:sugirieras:sugirierais:sugiriera:sugirieran"],
+    ["tener", "иметь", "to have", "F", "tuviera:tuviéramos:tuvieras:tuvierais:tuviera:tuvieran"],
+    ["traducir", "переводить", "to translate", "F", "tradujera:tradujéramos:tradujeras:tradujerais:tradujera:tradujeran"],
+    ["traer", "приносить", "to bring", "F", "trajera:trajéramos:trajeras:trajerais:trajera:trajeran"],
+    ["venir", "приходить", "to come", "F", "viniera:viniéramos:vinieras:vinierais:viniera:vinieran"],
+    ["ver", "видеть", "to see", "S", "viera:viéramos:vieras:vierais:viera:vieran"],
+    ["vestirse", "одеваться", "to get dressed", "V", "me vistiera:nos vistiéramos:te vistieras:os vistierais:se vistiera:se vistieran"],
+    ["volver", "возвращаться", "to return", "R", "volviera:volviéramos:volvieras:volvierais:volviera:volvieran"],
+  ],
+};
+</script>
+<script src="../assets/trainer.js"></script>
+</body>
+</html>
